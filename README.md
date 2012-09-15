@@ -1,1 +1,1 @@
-# nodeknx project
+# nodejs eibdclient
