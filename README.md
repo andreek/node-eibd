@@ -1,1 +1,1 @@
-# nodejs eibdclient
+# nodejs eibd client (EIB/KNX daemon)
