@@ -1,0 +1,11 @@
+{
+  "name": "node-eibd",
+  "version": "0.0.0",
+  "description": "node eibd client",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:andreek/node-eibd.git"
+  },
+  "author": "Andree Klattenhoff"
+}
