@@ -11,14 +11,18 @@ function groupswrite(opts, gad, value, callback) {
   var address = conn.str2addr(gad);
 
   conn.socketRemote(opts, function() {
-    conn.openTGroup(address, 0, function () {
+    conn.openTGroup(address, 0, function (err) {
 
-      var data = new Array(2);
-      data[0] = 0;
-      data[1] = 0x80 | value;
+      if(err) {
+        callback(err);
+      } else {
+        var data = new Array(2);
+        data[0] = 0;
+        data[1] = 0x80 | value;
 
-      // callback fired after server responses!
-      conn.sendAPDU(data, callback);
+        // callback fired after server responses!
+        conn.sendAPDU(data, callback);
+      }
 
     });
   });
@@ -36,7 +40,11 @@ if(!host || !port) {
 } else if(!value) {
   console.log(new Error('No value given'));
 } else {
-  groupswrite({ host: host, port: port}, gad, value, function() {
-    console.log('value written');
+  groupswrite({ host: host, port: port}, gad, value, function(err) {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log('value written');
+    }
   });
 }

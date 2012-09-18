@@ -149,9 +149,19 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
 
   this.socket.once('data', function(data) {
     data = unpack(data);
-    console.log((data[0]<<8) | data[1]);
+    
     this.end();
-    callback();
+    
+    if((data[0]<<8) | data[1] === 2) {
+      if(data[2]<<8 | data[3] == 34) {
+        callback(null);
+      } else {
+        callback(new Error('request invalid'));
+      }
+    } else {
+      callback(new Error('invalid buffer length received'))
+    }
+
   });
   this.sendRequest(arr);
 
@@ -165,11 +175,6 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
   arr[1] = 37;
   arr[2] = data[0];
   arr[3] = data[1];
-
-  this.socket.once('data', function(data) {
-    data = unpack(data);
-    console.log(data);
-  });
 
   this.sendRequest(arr, callback);
 

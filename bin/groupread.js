@@ -12,13 +12,17 @@ function groupread(opts, gad, callback) {
     
     var address = eibd.str2addr(gad);
     
-    eibd.openTGroup(address, false, function () {
+    eibd.openTGroup(address, false, function (err) {
 
-      var value = new Array(2);
-      value[0] = 0;
-      value[1] = 0;
+      if(err) {
+        callback(err);
+      } else {
+        var value = new Array(2);
+        value[0] = 0;
+        value[1] = 0;
 
-      eibd.sendAPDU(value, callback);
+        eibd.sendAPDU(value, callback);
+      }
   
     });
 
@@ -35,7 +39,11 @@ if(!host || !port) {
 } else if(!gad) {
   callback(new Error('No gad given'));
 } else {
-  groupread({ host: host, port: port }, gad, function() {
-    console.log('Value read from device\nSee groupsocketlisten stream for input');
+  groupread({ host: host, port: port }, gad, function(err) {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log('Value read from device\nSee groupsocketlisten stream for input');
+    }
   });
 }
