@@ -1,5 +1,5 @@
 
-//  Copyright (C) 20212>  Andree Klattenhoff
+//  Copyright (C) 2012>  Andree Klattenhoff
 //  
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -28,9 +28,19 @@ function pack(data) {
   return buf;
 }
 
+function unpack(buf) {
+  var arr = new Array(buf.length);
+  for(var i = 0; i < buf.length; i++) {
+    arr[i] = buf.readUInt8(i);
+  }
+
+  return arr;
+
+}
+
 function EIBConnection() {
 
-  this.data = [];
+  this.data = new Buffer([]);
   this.conn = null;
 
 }
@@ -41,21 +51,18 @@ function EIBConnection() {
 EIBConnection.prototype.socketRemote = function(opts, callback) {
 
   if(!opts.host || !opts.port) {
-    console.log('please provide a host and a port as argument!');
-    return null;
+    callback(new Error('please provide a host and a port as argument!'));
   }
 
   this.host = opts.host;
   this.port = opts.port;
 
-  this.conn = net.connect(opts, callback);
+  this.socket = net.connect(opts, callback);
   
-  this.conn.on('error', this.onError);
+  this.socket.on('error', this.onError);
   
-  this.conn.on('data', this.onData);
+  this.socket.on('data', this.onData);
   
-  this.conn.on('end', this.onEnd);
-
 }
 
 /**
@@ -70,31 +77,64 @@ EIBConnection.prototype.onError = function(err) {
  * close function
  */
 EIBConnection.prototype.end = function() {
-  if(this.conn) this.conn.end();
-}
-
-/**
- * discconect handler
- */
-EIBConnection.prototype.onEnd = function () {
-  console.log('DISCONNECTED');
+  if(this.socket) this.socket.end();
 }
 
 /**
  * for testing stdout data
  */
 EIBConnection.prototype.onData = function(data) {
-
-  // TODO find a way to handle responses
-  this.data += data;
-  var buf = new Buffer(data);
-  var arr = new Array();
-  for(var i = 0; i < buf.length; i++) {
-    arr += buf.readUInt8(i);
-  }
-  console.log(data.length)
-  console.log((data[2]<<8)|(data[3]));
+  // store data
+  this.data = data;
 }
+
+EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
+  
+  var arr = new Array(5);
+ 
+  arr[2] = 0;
+  arr[3] = 0;
+  if(writeOnly != 0) {
+    arr[4] = 0xff;
+  } else {
+    arr[4] = 0x00;
+  }
+
+  arr[0] = 0;
+  arr[1] = 38;
+
+  this.socket.on('data', function(data) {
+    // TODO Parse data for read / write / reponse requests and values
+    /*
+    console.log(data[3]);
+    console.log(data[3] & 0xC0);
+    data = unpack(data)
+    console.log(data[3] & 0xC0);
+  //  console.log(data[3]&0xC0);
+   // var known = (data[0] & 0x3) || (data[3] & 0xC0) == 0xC0;
+    //console.log(known);
+    //
+    switch(data[3]& 0xC0)  {
+      case 8:
+        console.log('write')  
+        break;
+      case 4:
+        console.log('response');
+        break;
+      case 0:
+        console.log('read')
+        break;
+    }
+//    console.log(data[1]);
+//    console.log('WRITE?' + (data[3] & 0xC0));*/
+  });
+
+  this.sendRequest(arr, function() {
+    callback();
+  });
+  
+}
+
 
 EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   
@@ -107,7 +147,13 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   arr[3] = dest & 0xff;
   arr[4] = 0xff;
 
-  this.sendRequest(arr, callback);
+  this.socket.once('data', function(data) {
+    data = unpack(data);
+    console.log((data[0]<<8) | data[1]);
+    this.end();
+    callback();
+  });
+  this.sendRequest(arr);
 
 }
 
@@ -120,7 +166,12 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
   arr[2] = data[0];
   arr[3] = data[1];
 
-  this.conn.sendRequest(arr, callback);
+  this.socket.once('data', function(data) {
+    data = unpack(data);
+    console.log(data);
+  });
+
+  this.sendRequest(arr, callback);
 
 }
 
@@ -137,7 +188,7 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
   
   var buf = pack(data);
   
-  this.conn.write(buf, callback);
+  this.socket.write(buf, callback);
 
 }
 
@@ -171,9 +222,9 @@ EIBConnection.prototype.str2addr = function(str, callback) {
   }
 }
 
-function connect() {
+function init() {
   var e = new EIBConnection();
   return e;
 }
 
-module.exports = connect;
+module.exports = init;
