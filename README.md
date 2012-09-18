@@ -4,7 +4,7 @@
 
 ./bin/groupswrite localhost 6720 0/1/0 1
 
-./bin/groupsread localhost 6720 0/1/0
+./bin/groupread localhost 6720 0/1/0
 
 ## Resources
 
