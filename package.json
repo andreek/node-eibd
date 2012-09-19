@@ -1,6 +1,6 @@
 {
-  "name": "node-eibd",
-  "version": "0.0.0",
+  "name": "eibd",
+  "version": "0.1.0",
   "description": "node eibd client",
   "main": "main.js",
   "repository": {
