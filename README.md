@@ -1,10 +1,19 @@
 # nodejs eibd client (EIB/KNX daemon)
 
+This is at the moment not a full implementation of the eibd client library. It supports all functions needed
+for groupswrite, groupread, groupsocketlisten.
+
 ## Usage
 
-./bin/groupswrite localhost 6720 0/1/0 1
+### Change values with groupswrite
+  
+  ./bin/groupswrite localhost 6720 0/1/0 1
 
-./bin/groupread localhost 6720 0/1/0
+### Read values with groupread
+  ./bin/groupread localhost 6720 0/1/0
+
+### Listening for telegrams
+  ./bin/groupsocketlisten localhost 6720
 
 ## Resources
 
