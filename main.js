@@ -181,7 +181,7 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
   var self = this;
   this.sendRequest(arr, function() {
     self.end();
-    callback();
+    if(callback) callback();
   });
 
 }
