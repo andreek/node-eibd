@@ -3,6 +3,10 @@
 This is at the moment not a full implementation of the eibd client library. It supports all functions needed
 for groupswrite, groupread, groupsocketlisten.
 
+## Installation
+
+  npm install eibd
+
 ## Usage
 
 ### Change values with groupswrite
