@@ -28,10 +28,14 @@ function pack(data) {
   return buf;
 }
 
+/**
+ * unpack buffer in reverse order
+ */
 function unpack(buf) {
-  var arr = new Array(buf.length);
-  for(var i = 0; i < buf.length; i++) {
-    arr[i] = buf.readUInt8(i);
+  var arr = new Array();
+  for(var i = buf.length-1; i >= 0; i--) {
+    var val = buf.readUInt8(i);
+    arr.push(val);
   }
 
   return arr;
@@ -103,30 +107,40 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   arr[0] = 0;
   arr[1] = 38;
 
+  var self = this;
   this.socket.on('data', function(data) {
-    // TODO Parse data for read / write / reponse requests and values
-    /*
-    console.log(data[3]);
-    console.log(data[3] & 0xC0);
-    data = unpack(data)
-    console.log(data[3] & 0xC0);
-  //  console.log(data[3]&0xC0);
-   // var known = (data[0] & 0x3) || (data[3] & 0xC0) == 0xC0;
-    //console.log(known);
-    //
-    switch(data[3]& 0xC0)  {
-      case 8:
-        console.log('write')  
-        break;
-      case 4:
-        console.log('response');
-        break;
-      case 0:
-        console.log('read')
-        break;
+    
+    data = unpack(data);
+
+    if(data.length > 4) {
+      var src = (data[5]<<8)|data[4];
+      var dest = (data[3]<<8)|data[2];
+      var action = '';
+      var val = 0;
+      switch(data[0]&0xC0)  {
+        case 0x80:
+          action = 'Write';
+          val = data[0]-128;
+          break;
+        case 0x40:
+          action = 'Response';
+          val = data[0]-64;
+          break;
+        case 0x00:
+          action = 'Read';
+          break;
+      }
+      
+      if(action === 'Read') {
+        console.log(action+' from '+self.addr2str(src, false)+' to '+self.addr2str(dest, true));
+      } else {
+        console.log(action+' from '+self.addr2str(src, false)+' to '+self.addr2str(dest, true)+': '+val);
+      }
+
+    } else {
+      console.log(data);
     }
-//    console.log(data[1]);
-//    console.log('WRITE?' + (data[3] & 0xC0));*/
+    
   });
 
   this.sendRequest(arr, function() {
@@ -134,7 +148,6 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   });
   
 }
-
 
 EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   
@@ -145,15 +158,17 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
 
   arr[2] = (dest>>8) & 0xff;
   arr[3] = dest & 0xff;
-  arr[4] = 0xff;
+  if(writeOnly != 0) {
+    arr[4] = 0xff;
+  } else {
+    arr[4] = 0x00;
+  }
 
   this.socket.once('data', function(data) {
     data = unpack(data);
     
-    this.end();
-    
-    if((data[0]<<8) | data[1] === 2) {
-      if(data[2]<<8 | data[3] == 34) {
+    if((data[2]<<8) | data[3] === 2) {
+      if(data[0]<<8 | data[1] == 34) {
         callback(null);
       } else {
         callback(new Error('request invalid'));
@@ -176,7 +191,11 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
   arr[2] = data[0];
   arr[3] = data[1];
 
-  this.sendRequest(arr, callback);
+  var self = this;
+  this.sendRequest(arr, function() {
+    self.end();
+    callback();
+  });
 
 }
 
@@ -225,6 +244,23 @@ EIBConnection.prototype.str2addr = function(str, callback) {
       return result;
     }
   }
+}
+
+EIBConnection.prototype.addr2str = function(adr, ga) {
+  var str = '';
+  if(ga === true) {
+    var a = (adr>>11)&0xf;
+    var b = (adr>>8)&0x7;
+    var c = (adr & 0xff);
+    str = a+'/'+b+'/'+c;
+  } else {
+    var a = adr>>12;
+    var b = (adr>>8)&0xf;
+    var c = a&0xff;
+    str = a+'.'+b+'.'+c;
+  }
+
+  return str;
 }
 
 function init() {

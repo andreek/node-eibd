@@ -12,7 +12,7 @@ function groupread(opts, gad, callback) {
     
     var address = eibd.str2addr(gad);
     
-    eibd.openTGroup(address, false, function (err) {
+    eibd.openTGroup(address, 0, function (err) {
 
       if(err) {
         callback(err);

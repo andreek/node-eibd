@@ -11,7 +11,7 @@ function groupswrite(opts, gad, value, callback) {
   var address = conn.str2addr(gad);
 
   conn.socketRemote(opts, function() {
-    conn.openTGroup(address, 0, function (err) {
+    conn.openTGroup(address, 1, function (err) {
 
       if(err) {
         callback(err);
