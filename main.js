@@ -203,6 +203,9 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
 
 }
 
+EIBConnection.prototype.str2addr = tools.str2addr;
+EIBConnection.prototype.addr2str = tools.addr2str;
+
 function init() {
   var e = new EIBConnection();
   return e;
