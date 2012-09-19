@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var eibd = require('../main');
-
+var tools = require('../tools');
 /**
  * groupswrite
  */
@@ -8,7 +8,7 @@ function groupswrite(opts, gad, value, callback) {
   
   var conn = eibd();
 
-  var address = conn.str2addr(gad);
+  var address = tools.str2addr(gad);
 
   conn.socketRemote(opts, function() {
     conn.openTGroup(address, 1, function (err) {
@@ -27,7 +27,6 @@ function groupswrite(opts, gad, value, callback) {
     });
   });
 }
-
 var host = process.argv[2];
 var port = process.argv[3];
 var gad = process.argv[4];

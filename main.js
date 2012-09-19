@@ -13,41 +13,20 @@
 //  
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-var net = require('net');
-
-/**
- * pack array to u8int-buffer
- */
-function pack(data) {
-  var buf = new Buffer(data.length);
-
-  for(var i = 0; i < data.length; i++) {
-    buf.writeUInt8(data[i], i);
-  }
-
-  return buf;
-}
-
-/**
- * unpack buffer in reverse order
- */
-function unpack(buf) {
-  var arr = new Array();
-  for(var i = buf.length-1; i >= 0; i--) {
-    var val = buf.readUInt8(i);
-    arr.push(val);
-  }
-
-  return arr;
-
-}
+var events = require('events'),
+    net = require('net'),
+    tools = require('./tools'),
+    sys = require('sys');
 
 function EIBConnection() {
+
+  events.EventEmitter.call(this);
 
   this.data = new Buffer([]);
   this.conn = null;
 
 }
+sys.inherits(EIBConnection, events.EventEmitter);
 
 /**
  * EIBSocketRemote
@@ -108,45 +87,53 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   arr[1] = 38;
 
   var self = this;
+
+  this.on('data', callback)
+
   this.socket.on('data', function(data) {
+
+    data = tools.unpack(data);
     
-    data = unpack(data);
+    var len = data[data.length-2];
+    var input = data[0];
+    var action = null;
+    var src = null;
+    var dest = null;
+    var val = null;
 
-    if(data.length > 4) {
-      var src = (data[5]<<8)|data[4];
-      var dest = (data[3]<<8)|data[2];
-      var action = '';
-      var val = 0;
-      switch(data[0]&0xC0)  {
-        case 0x80:
-          action = 'Write';
-          val = data[0]-128;
-          break;
-        case 0x40:
-          action = 'Response';
-          val = data[0]-64;
-          break;
-        case 0x00:
-          action = 'Read';
-          break;
-      }
-      
-      if(action === 'Read') {
-        console.log(action+' from '+self.addr2str(src, false)+' to '+self.addr2str(dest, true));
-      } else {
-        console.log(action+' from '+self.addr2str(src, false)+' to '+self.addr2str(dest, true)+': '+val);
-      }
-
-    } else {
-      console.log(data);
+    if(len === 8) {
+      src = (data[5]<<8)|data[4];
+      dest = (data[3]<<8)|data[2];
+      action = input;
+    } else if(len === 9){
+      src = (data[6]<<8)|data[5];
+      dest = (data[4]<<8)|data[3];
+      action = data[1];
+      input = input.toString(16);
     }
     
+    switch(action&0xC0)  {
+      case 0x80:
+        action = 'Write';
+        val = input;
+        if(len === 8) val = val-128;
+        break;
+      case 0x40:
+        action = 'Response';
+        val = input;
+        if(len === 8) val = val-64;
+        break;
+      case 0x00:
+        action = 'Read';
+        break;
+    }
+
+    self.emit('data', action, src, dest, val);
+    
   });
 
-  this.sendRequest(arr, function() {
-    callback();
-  });
-  
+  this.sendRequest(arr);
+
 }
 
 EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
@@ -165,7 +152,7 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   }
 
   this.socket.once('data', function(data) {
-    data = unpack(data);
+    data = tools.unpack(data);
     
     if((data[2]<<8) | data[3] === 2) {
       if(data[0]<<8 | data[1] == 34) {
@@ -210,57 +197,10 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
     data[i] = input[i-2];
   }
   
-  var buf = pack(data);
+  var buf = tools.pack(data);
   
   this.socket.write(buf, callback);
 
-}
-
-/**
- * parse string to 16-bit integer knx address
- */
-EIBConnection.prototype.str2addr = function(str, callback) {
-  var m = str.match(/(\d*)\/(\d*)\/(\d*)/);
-  var a, b, c = 0;
-  var result = -1;
-  
-  if(m && m.length > 0) {
-    a = (m[1] & 0x01f) << 11;
-    b = (m[2] & 0x07) << 8;
-    c = m[3] & 0xff;
-    result = a | b | c;
-  }
-  
-  if(result > -1) {
-    if(callback) {
-      callback(null, result);
-    } else {
-      return result;
-    }
-  } else {
-    if(callback) { 
-      callback(new Error("Could not parse address"));
-    } else {
-      return result;
-    }
-  }
-}
-
-EIBConnection.prototype.addr2str = function(adr, ga) {
-  var str = '';
-  if(ga === true) {
-    var a = (adr>>11)&0xf;
-    var b = (adr>>8)&0x7;
-    var c = (adr & 0xff);
-    str = a+'/'+b+'/'+c;
-  } else {
-    var a = adr>>12;
-    var b = (adr>>8)&0xf;
-    var c = a&0xff;
-    str = a+'.'+b+'.'+c;
-  }
-
-  return str;
 }
 
 function init() {

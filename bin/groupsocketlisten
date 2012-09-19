@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+var tools = require('../tools');
 /**
  * groupsocketlisten
  */
@@ -21,7 +21,11 @@ var port = process.argv[3];
 if(!host || !port) {
   callback(new Error('No hostname or port'));
 } else {
-  groupsocketlisten({ host: host, port: port }, function() {
-    console.log('Listening for input:');
+  groupsocketlisten({ host: host, port: port }, function(action, src, dest, val) {
+    if(action === 'Read') {
+      console.log(action+' from '+tools.addr2str(src, false)+' to '+tools.addr2str(dest, true));
+    } else {
+      console.log(action+' from '+tools.addr2str(src, false)+' to '+tools.addr2str(dest, true)+': '+val);
+    }
   });
 }

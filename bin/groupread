@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+var tools = require('../tools');
 /**
  * groupread
  */
@@ -10,7 +10,7 @@ function groupread(opts, gad, callback) {
 
   eibd.socketRemote(opts, function() {
     
-    var address = eibd.str2addr(gad);
+    var address = tools.str2addr(gad);
     
     eibd.openTGroup(address, 0, function (err) {
 
