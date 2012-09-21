@@ -177,7 +177,9 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
   arr[1] = 37;
   arr[2] = data[0];
   arr[3] = data[1];
-
+  if(data.length === 3) {
+    arr[4] = data[2];
+  }
   var self = this;
   this.sendRequest(arr, function() {
     self.end();
@@ -198,7 +200,7 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
   }
   
   var buf = tools.pack(data);
-  
+  console.log(buf);
   this.socket.write(buf, callback);
 
 }
