@@ -151,7 +151,7 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   } else {
     arr[4] = 0x00;
   }
-
+  
   this.socket.once('data', function(data) {
     data = tools.unpack(data);
     

@@ -56,6 +56,47 @@ describe('EIBConnection', function() {
           done(); 
         });
       });
+    })
+  }),
+  describe('sendAPDU', function() {
+    it('should work without error', function(done) {
+      var conn = new eibd();
+      conn.socketRemote(opts, function() {
+        conn.sendAPDU([0,0],function(err) {
+          assert.equal(undefined, err);
+          done(); 
+        });
+      });
     });
+  }),
+  describe('sendRequest', function() {
+    it('should work without error', function(done) {
+      var conn = new eibd();
+      conn.socketRemote(opts, function() {
+        conn.sendRequest([0,0],function(err) {
+          assert.equal(undefined, err);
+          done(); 
+        });
+      });
+    }); 
+  }),
+  describe('openGroupSocket', function() {
+    it('should get input', function(done) {
+      var conn = new eibd();
+      conn.socketRemote(opts, function() {
+        conn.openGroupSocket(0, function(action, src, dest, val) {
+          done();  
+        });
+      });
+
+      // send command for socket listen
+      var groupswrite = new eibd();
+      groupswrite.socketRemote(opts, function() {
+        var dest = conn.str2addr('0/1/0');
+        groupswrite.openTGroup(dest, 1, function(err) {
+          groupswrite.sendAPDU([0, 0xff&1]);
+        });
+      });
+    })
   })
 });
