@@ -20,7 +20,6 @@ describe('EIBConnection', function() {
   });
 
   describe('socketRemote', function() {
-
     it('should open a connection', function(done) {
       var conn = new eibd();
       conn.socketRemote(opts, function() {
@@ -45,6 +44,18 @@ describe('EIBConnection', function() {
         assert.equal(true, err instanceof Error);
         done();      
       }
+    });
+  }),
+  describe('openTGroup', function() {
+    it('should work without error', function(done) {
+      var conn = new eibd();
+      conn.socketRemote(opts, function() {
+        var dest = conn.str2addr('0/1/0');
+        conn.openTGroup(dest, 0, function(err) {
+          assert.equal(null, err);
+          done(); 
+        });
+      });
     });
   })
 });

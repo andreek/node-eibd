@@ -196,7 +196,7 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
   data[0] = (input.length>>8) &0xff
   data[1] = input.length & 0xff;
 
-  for(i = 2; i < data.length; i++) {
+  for(var i = 2; i < data.length; i++) {
     data[i] = input[i-2];
   }
   
