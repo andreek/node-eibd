@@ -39,10 +39,12 @@ describe('EIBConnection', function() {
     }),
     it('should notice if host or port is not given', function(done) {
       var conn = new eibd();
-      conn.socketRemote(port, function(err) {
-        assert.equal(true, true);
-        done();
-      });
+      try {
+        conn.socketRemote(port);
+      } catch(err) {
+        assert.equal(true, err instanceof Error);
+        done();      
+      }
     });
   })
 });

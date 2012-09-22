@@ -34,17 +34,19 @@ sys.inherits(EIBConnection, events.EventEmitter);
 EIBConnection.prototype.socketRemote = function(opts, callback) {
 
   if(!opts.host || !opts.port) {
-    callback(new Error('please provide a host and a port as argument!'));
+    throw new Error('please provide a host and a port as argument!');
+  } else {
+
+    this.host = opts.host;
+    this.port = opts.port;
+
+    this.socket = net.connect(opts, callback);
+    
+    this.socket.on('error', this.onError);
+    this.socket.on('error', callback);
+    
+    this.socket.on('data', this.onData);
   }
-
-  this.host = opts.host;
-  this.port = opts.port;
-
-  this.socket = net.connect(opts, callback);
-  
-  this.socket.on('error', this.onError);
-  
-  this.socket.on('data', this.onData);
   
 }
 

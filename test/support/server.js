@@ -16,6 +16,16 @@ function TestServer(port, callback) {
   });
 
   this.server.listen(port, callback);
+  
+  return this;
+}
+
+TestServer.prototype.end = function(callback) {
+  if(this.server) {
+    this.server.close(callback);
+  } else {
+    if(callback) callback();
+  }
 }
 
 TestServer.prototype.noticeSockets = function(req, dest, src, action, value) {
