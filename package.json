@@ -1,11 +1,12 @@
 {
   "name": "eibd",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "node eibd client",
   "main": "main.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:andreek/node-eibd.git"
   },
-  "author": "Andree Klattenhoff"
+  "author": "Andree Klattenhoff",
+  "scripts": { "test": "mocha -R list ./test" }
 }
