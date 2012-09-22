@@ -91,7 +91,7 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   this.on('data', callback)
 
   this.socket.on('data', function(data) {
-
+    
     data = tools.unpack(data);
     
     var len = data[data.length-2];
@@ -142,7 +142,6 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   var arr = new Array(5);
   arr[0] = 0;
   arr[1] = 34;
-
   arr[2] = (dest>>8) & 0xff;
   arr[3] = dest & 0xff;
   if(writeOnly != 0) {
@@ -200,7 +199,7 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
   }
   
   var buf = tools.pack(data);
-  console.log(buf);
+  
   this.socket.write(buf, callback);
 
 }
