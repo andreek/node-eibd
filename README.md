@@ -11,13 +11,13 @@ for groupswrite, groupread, groupsocketlisten.
 
 ### Change values with groupswrite
   
-  ./bin/groupswrite localhost 6720 0/1/0 1
+  ./bin/groupswrite host port gad 0..255
 
 ### Read values with groupread
-  ./bin/groupread localhost 6720 0/1/0
+  ./bin/groupread host port gad
 
 ### Listening for telegrams
-  ./bin/groupsocketlisten localhost 6720
+  ./bin/groupsocketlisten host port
 
 ## Resources
 
