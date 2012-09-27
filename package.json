@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "mocha": "*"
-  }
+  },
   "author": "Andree Klattenhoff",
   "scripts": { "test": "mocha -R list ./test" }
 }
