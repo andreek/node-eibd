@@ -2,7 +2,7 @@
 var eibd = require('../main');
 /**
  * groupwrite
- * send a group write telegram to a group address (for values less than 6 bit width)
+ * send a group write telegram to a group address (for values with more than 6 bit width)
  */
 function groupwrite(opts, gad, value, callback) {
   
