@@ -2,6 +2,7 @@
 var eibd = require('../main');
 /**
  * groupswrite
+ * send a group write telegram to a group address (for values with less than 6 bit width)
  */
 function groupswrite(opts, gad, value, callback) {
   
@@ -18,11 +19,7 @@ function groupswrite(opts, gad, value, callback) {
         var data = new Array(2);
         data[0] = 0;
         data[1] = 0x80 | value;
-        if(value > 1) {
-          data[1] = 0x80;
-          data.push(0xff & value);
-        }
-        // callback fired after server responses!
+        
         conn.sendAPDU(data, callback);
       }
 
