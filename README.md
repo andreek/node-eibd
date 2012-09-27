@@ -12,14 +12,18 @@ Implements all functions of eibd client library needed for groupswrite/groupwrit
 
 ## Usage
 
-### Change values with groupswrite
+### groupwrite
   
-  ./bin/groupswrite host port gad 0..255
+  ./bin/groupwrite host port x/x/x 0..255
 
-### Read values with groupread
-  ./bin/groupread host port gad
+### groupswrite
+  
+  ./bin/groupswrite host port x/x/x 0..1
 
-### Listening for telegrams
+### groupread
+  ./bin/groupread host port x/x/x
+
+### Listening for group telegrams
   ./bin/groupsocketlisten host port
 
 
