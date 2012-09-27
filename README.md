@@ -1,11 +1,14 @@
-# nodejs eibd client (EIB/KNX daemon)
+# node.js eibd client (EIB/KNX daemon)
 
-This is at the moment not a full implementation of the eibd client library. It supports all functions needed
-for groupswrite, groupread, groupsocketlisten.
+Implements all functions of eibd client library needed for groupswrite/groupwrite, groupread and groupsocketlisten.
 
-## Installation
+## Install
 
   npm install eibd
+
+## Test
+  
+  npm test
 
 ## Usage
 
@@ -19,7 +22,8 @@ for groupswrite, groupread, groupsocketlisten.
 ### Listening for telegrams
   ./bin/groupsocketlisten host port
 
+
 ## Resources
 
  * https://github.com/ekarak/eibd_ruby
- * http://sourceforge.net/projects/bcusdk/ (c client library)
+ * http://switch.dl.sourceforge.net/project/bcusdk/sdkdoc/sdkdoc-0.0.5.pdf
