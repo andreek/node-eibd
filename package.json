@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git@github.com:andreek/node-eibd.git"
   },
+  "devDependencies": {
+    "mocha": "*"
+  }
   "author": "Andree Klattenhoff",
   "scripts": { "test": "mocha -R list ./test" }
 }
