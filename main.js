@@ -93,7 +93,7 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   this.on('data', callback)
 
   this.socket.on('data', function(data) {
-    
+
     data = tools.unpack(data);
     
     var len = data[data.length-2];
@@ -127,6 +127,9 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
         break;
       case 0x00:
         action = 'Read';
+        if(len == 8 || len == 9) {
+          dest = (data[3]<<8)|data[2];
+        }
         break;
     }
 
