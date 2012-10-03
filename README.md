@@ -34,14 +34,14 @@ npm test
 
 Opens a connection eibd over TCP/IP. 
 
-'''javascript
+```javascript
 var opts = {
   host: 'localhost',
   port: 6720
 };
 
 eibd.socketRemote(opts, callback);
-'''
+```
 
 ### openGroupSocket(writeOnly, callback)
 
