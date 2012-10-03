@@ -28,7 +28,7 @@ npm test
 
 ./bin/groupsocketlisten host port
 
-## Methods
+## API
 
 ### socketRemote(opts, callback)
 
