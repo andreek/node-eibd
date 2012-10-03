@@ -205,7 +205,7 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
 }
 
 /**
- * Send TCP/IP request to eib-daemon
+ * Sends TCP/IP request to eib-daemon
  */
 EIBConnection.prototype.sendRequest = function(input, callback) {
   
