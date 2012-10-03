@@ -11,19 +11,6 @@ module.exports.pack = function(data) {
   return buf;
 }
 
-/**
- * unpack uint8-buffer in reverse order
- */
-module.exports.unpack = function(buf) {
-  var arr = new Array();
-  for(var i = buf.length-1; i >= 0; i--) {
-    var val = buf.readUInt8(i);
-    arr.push(val);
-  }
-
-  return arr;
-}
-
 module.exports.str2addr = function(str) {
   var m = str.match(/(\d*)\/(\d*)\/(\d*)/);
   var a, b, c = 0;
@@ -51,9 +38,9 @@ module.exports.addr2str = function(adr, ga) {
     var c = (adr & 0xff);
     str = a+'/'+b+'/'+c;
   } else {
-    var a = adr>>12;
+    var a = (adr>>12)&0xf;
     var b = (adr>>8)&0xf;
-    var c = a&0xff;
+    var c = adr&0xff;
     str = a+'.'+b+'.'+c;
   }
 
