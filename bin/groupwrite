@@ -39,7 +39,7 @@ if(!host || !port) {
 } else if(!value) {
   console.log(new Error('No value given'));
 } else {
-  groupswrite({ host: host, port: port}, gad, value, function(err) {
+  groupwrite({ host: host, port: port}, gad, value, function(err) {
     if(err) {
       console.log(err);
     } else {
