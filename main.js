@@ -29,7 +29,7 @@ function EIBConnection() {
 sys.inherits(EIBConnection, events.EventEmitter);
 
 /**
- * EIBSocketRemote
+ * Opens a connection eibd over TCP/IP
  */
 EIBConnection.prototype.socketRemote = function(opts, callback) {
 
@@ -69,10 +69,12 @@ EIBConnection.prototype.end = function() {
  * for testing stdout data
  */
 EIBConnection.prototype.onData = function(data) {
-  // store data
-  this.data = data;
+  this.data += data;
 }
 
+/**
+ * Opens a Group communication interface
+ */
 EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   
   var arr = new Array(5);
@@ -93,47 +95,52 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   this.on('data', callback)
 
   this.socket.on('data', function(data) {
+   
+    // data length
+    var len = data[1];
 
-    data = tools.unpack(data);
-    
-    var len = data[data.length-2];
-    var input = data[0];
-    var action = null;
-    var src = null;
-    var dest = null;
-    var val = null;
+    if(len >= 8) {
 
-    if(len === 8) {
-      src = (data[5]<<8)|data[4];
-      dest = (data[3]<<8)|data[2];
-      action = input;
-    } else if(len === 9){
-      src = (data[6]<<8)|data[5];
-      dest = (data[4]<<8)|data[3];
-      action = data[1];
-      input = input.toString(16);
+      // command
+      var input = data[data.length-1];
+      var action = input;
+      
+      // 4 + 5 src adr.
+      var src = (data[4]<<8)|data[5];
+      // 6 + 7 dest adr.
+      var dest = (data[6]<<8)|data[7];
+      var val = null;
+
+      // value is not coded with command 
+      // extra field
+      if(len === 9){
+        action = data[data.length-2];
+        input = input.toString(16);
+      }
+      
+      switch(action&0xC0)  {
+        case 0x80:
+          action = 'Write';
+          val = input;
+
+          // decode command from value
+          if(len === 8) val = val-128;
+          break;
+        case 0x40:
+          action = 'Response';
+          val = input;
+
+          // decode command from value
+          if(len === 8) val = val-64;
+          break;
+        case 0x00:
+          action = 'Read';
+          break;
+      }
+
+      self.emit('data', action, src, dest, val);
+
     }
-    
-    switch(action&0xC0)  {
-      case 0x80:
-        action = 'Write';
-        val = input;
-        if(len === 8) val = val-128;
-        break;
-      case 0x40:
-        action = 'Response';
-        val = input;
-        if(len === 8) val = val-64;
-        break;
-      case 0x00:
-        action = 'Read';
-        if(len == 8 || len == 9) {
-          dest = (data[3]<<8)|data[2];
-        }
-        break;
-    }
-
-    self.emit('data', action, src, dest, val);
     
   });
 
@@ -141,6 +148,9 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
 
 }
 
+/**
+ * Opens a connection of type T_Group
+ */
 EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   
   // prepare dest
@@ -156,10 +166,9 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
   }
   
   this.socket.once('data', function(data) {
-    data = tools.unpack(data);
     
-    if((data[2]<<8) | data[3] === 2) {
-      if(data[0]<<8 | data[1] == 34) {
+    if(data[1] === 2) {
+      if(data[2]<<8 | data[3] == 34) {
         callback(null);
       } else {
         callback(new Error('request invalid'));
@@ -173,6 +182,9 @@ EIBConnection.prototype.openTGroup = function(dest, writeOnly, callback) {
 
 }
 
+/**
+ * Sends an APDU
+ */
 EIBConnection.prototype.sendAPDU = function(data, callback) {
 
   var arr = new Array(data.length+2);
@@ -192,6 +204,9 @@ EIBConnection.prototype.sendAPDU = function(data, callback) {
 
 }
 
+/**
+ * Send TCP/IP request to eib-daemon
+ */
 EIBConnection.prototype.sendRequest = function(input, callback) {
   
   var data = new Array(input.length+2);
