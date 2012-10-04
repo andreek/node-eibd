@@ -12,8 +12,6 @@ npm test
 
 ## Usage
 
-![node-eibd](http://i.imgur.com/z9Con.png)
-
 ### groupwrite
   
 ./bin/groupwrite host port x/x/x 0..255
