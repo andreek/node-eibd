@@ -12,7 +12,7 @@ npm test
 
 ## Usage
 
-[![node-eibd](http://i.imgur.com/z9Con.png)](http://github.com/andreek/node-eibd)
+![node-eibd](http://i.imgur.com/z9Con.png)
 
 ### groupwrite
   
