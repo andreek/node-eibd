@@ -40,16 +40,33 @@ var opts = {
   port: 6720
 };
 
-eibd.socketRemote(opts, callback);
+eibd.socketRemote(opts, function() {
+  // connected
+});
 ```
 
 ### openGroupSocket(writeOnly, callback)
 
 Opens a Group communication interface
 
+```javascript
+eibd.on('data', function(action, src, dest, val) {
+  // do something
+});
+
+eibd.openGroupSocket(0);
+```
+
 ### openTGroup(dest, writeOnly, callback)
 
 Opens a connection of type T_Group
+
+```javascript
+var dest = eibd.str2addr('x/x/x');
+eibd.openTGroup(dest, 1, function(err) {
+
+});
+```
 
 ### sendAPDU(data, callback)
 
