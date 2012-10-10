@@ -81,13 +81,13 @@ describe('EIBConnection', function() {
     }); 
   }),
   describe('openGroupSocket', function() {
-    it('should get input', function(done) {
+    it('should get called three times', function(done) {
       var conn = new eibd();
       conn.socketRemote(opts, function() {
         var i = 0;
         conn.openGroupSocket(0, function(action, src, dest, val) {
           i++;
-          if(i === 3) done();  
+          if(i === 2) done();  
         });
       });
 

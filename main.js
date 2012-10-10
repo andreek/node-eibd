@@ -73,6 +73,54 @@ EIBConnection.prototype.onData = function(data) {
 }
 
 /**
+ * parsing group telegram from groupsocket
+ */
+EIBConnection.prototype.__parseTelegram = function(data) {
+  var len = data[0];
+  if(len >= 8) {
+
+    // command
+    var input = data[data.length-1];
+    var action = input;
+    
+    // 4 + 5 src adr.
+    var src = (data[4]<<8)|data[5];
+    // 6 + 7 dest adr.
+    var dest = (data[6]<<8)|data[7];
+    var val = null;
+
+    // value is not coded with command 
+    // extra field
+    if(len === 9){
+      action = data[data.length-2];
+      input = input.toString(16);
+    }
+    
+    switch(action&0xC0)  {
+      case 0x80:
+        action = 'Write';
+        val = input;
+
+        // decode command from value
+        if(len === 8) val = val-128;
+        break;
+      case 0x40:
+        action = 'Response';
+        val = input;
+
+        // decode command from value
+        if(len === 8) val = val-64;
+        break;
+      case 0x00:
+        action = 'Read';
+        break;
+    }
+    this.emit('data', action, src, dest, val);
+
+  }
+}
+
+/**
  * Opens a Group communication interface
  */
 EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
@@ -95,51 +143,15 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   this.on('data', callback)
 
   this.socket.on('data', function(data) {
-   
-    // data length
-    var len = data[1];
-
-    if(len >= 8) {
-
-      // command
-      var input = data[data.length-1];
-      var action = input;
-      
-      // 4 + 5 src adr.
-      var src = (data[4]<<8)|data[5];
-      // 6 + 7 dest adr.
-      var dest = (data[6]<<8)|data[7];
-      var val = null;
-
-      // value is not coded with command 
-      // extra field
-      if(len === 9){
-        action = data[data.length-2];
-        input = input.toString(16);
-      }
-      
-      switch(action&0xC0)  {
-        case 0x80:
-          action = 'Write';
-          val = input;
-
-          // decode command from value
-          if(len === 8) val = val-128;
-          break;
-        case 0x40:
-          action = 'Response';
-          val = input;
-
-          // decode command from value
-          if(len === 8) val = val-64;
-          break;
-        case 0x00:
-          action = 'Read';
-          break;
-      }
-
-      self.emit('data', action, src, dest, val);
-
+    var offset = 1;
+    while(offset < data.length) {
+     
+      var len = data[offset];
+      var lala = data.slice(offset, offset+len);
+      offset += len;
+      offset += 2;
+      // data length
+      self.__parseTelegram(lala);
     }
     
   });
