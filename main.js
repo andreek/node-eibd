@@ -83,10 +83,11 @@ EIBConnection.prototype.__parseTelegram = function(data) {
     var input = data[data.length-1];
     var action = input;
     
+    
     // 4 + 5 src adr.
-    var src = (data[4]<<8)|data[5];
+    var src = (data[3]<<8)|data[4];
     // 6 + 7 dest adr.
-    var dest = (data[6]<<8)|data[7];
+    var dest = (data[5]<<8)|data[6];
     var val = null;
 
     // value is not coded with command 
@@ -95,7 +96,6 @@ EIBConnection.prototype.__parseTelegram = function(data) {
       action = data[data.length-2];
       input = input.toString(16);
     }
-    
     switch(action&0xC0)  {
       case 0x80:
         action = 'Write';
@@ -147,14 +147,22 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
     while(offset < data.length) {
      
       var len = data[offset];
-      var telegram = data.slice(offset, offset+len);
+      if(len === 8 || len === 9) {
+        if(offset+len < data.length) {
+          var telegram = data.slice(offset, offset+len+1);
 
-      offset += len;
-      //filling zeroes following..
-      offset += 2;
+          offset += len;
+          //filling zeroes following..
+          offset += 2;
 
-      // data length
-      self.__parseTelegram(telegram);
+          // data length
+          self.__parseTelegram(telegram);
+        } else {
+          offset = data.length+1;
+        }
+      } else {
+        offset = data.length+1;
+      }
     }
     
   });
