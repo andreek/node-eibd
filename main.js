@@ -147,11 +147,14 @@ EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
     while(offset < data.length) {
      
       var len = data[offset];
-      var lala = data.slice(offset, offset+len);
+      var telegram = data.slice(offset, offset+len);
+
       offset += len;
+      //filling zeroes following..
       offset += 2;
+
       // data length
-      self.__parseTelegram(lala);
+      self.__parseTelegram(telegram);
     }
     
   });
