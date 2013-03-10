@@ -85,6 +85,7 @@ EIBConnection.prototype.__parseTelegram = function(data) {
   var len = data[0];
 
   if(len < 8) {
+    console.error('[ERROR] Invalid buffer length received')
     return;
   }
 
