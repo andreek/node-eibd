@@ -34,15 +34,13 @@ var port = process.argv[3];
 var gad = process.argv[4];
 
 if(!host || !port) {
-  callback(new Error('No hostname or port'));
+  console.error('[ERROR] No hostname or port'));
 } else if(!gad) {
-  callback(new Error('No gad given'));
+  console.error('[ERROR] No gad given'
 } else {
   groupread({ host: host, port: port }, gad, function(err) {
     if(err) {
-      console.log(err);
-    } else {
-      console.log('Value read from device\nSee groupsocketlisten stream for input');
-    }
+      console.error('[ERROR]'+err);
+    } 
   });
 }

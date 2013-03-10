@@ -19,7 +19,7 @@ var host = process.argv[2];
 var port = process.argv[3];
 
 if(!host || !port) {
-  callback(new Error('No hostname or port'));
+  console.error('[ERROR] No hostname or port');
 } else {
   groupsocketlisten({ host: host, port: port }, function(action, src, dest, val) {
     if(action === 'Read') {
