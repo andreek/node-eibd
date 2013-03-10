@@ -34,9 +34,9 @@ var port = process.argv[3];
 var gad = process.argv[4];
 
 if(!host || !port) {
-  console.error('[ERROR] No hostname or port'));
+  console.error('[ERROR] No hostname or port');
 } else if(!gad) {
-  console.error('[ERROR] No gad given'
+  console.error('[ERROR] No gad given');
 } else {
   groupread({ host: host, port: port }, gad, function(err) {
     if(err) {
