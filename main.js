@@ -1,4 +1,4 @@
-//  Copyright (C) 2012  Andree Klattenhoff
+//  Copyright (C) 2013  Andree Klattenhoff
 //  
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -12,9 +12,10 @@
 //  
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-var events = require('events'),
-    net = require('net'),
+var parser = require('./parser'),
     tools = require('./tools'),
+    net = require('net'),
+    events = require('events'),
     sys = require('sys');
 
 function EIBConnection() {
@@ -22,6 +23,7 @@ function EIBConnection() {
   events.EventEmitter.call(self);
 
   self.data = new Buffer([]);
+  self.parser = null;
   self.conn = null;
 
 }
@@ -43,13 +45,8 @@ EIBConnection.prototype.socketRemote = function(opts, callback) {
   self.port = opts.port;
 
   self.socket = net.connect(opts, callback);
-  
-  self.socket.on('error', self.onError);
   self.socket.on('error', callback);
-  
-  self.socket.on('data', self.onData);
-  
-  
+  self.socket.on('error', self.onError);
 }
 
 /**
@@ -66,69 +63,13 @@ EIBConnection.prototype.onError = function(err) {
  */
 EIBConnection.prototype.end = function() {
   var self = this;
-  if(self.socket) self.socket.end();
-}
-
-/**
- * for testing stdout data
- */
-EIBConnection.prototype.onData = function(data) {
-}
-
-/**
- * parsing group telegram from groupsocket
- */
-EIBConnection.prototype.__parseTelegram = function(data) {
-
-  var self = this;
-
-  var len = data[0];
-
-  if(len < 8) {
-    console.error('[ERROR] Invalid buffer length received')
-    return;
+  if(self.socket) {
+    self.socket.end();
   }
 
-  // command
-  var input = data[data.length-1];
-  var action = input;
-  
-  
-  // 4 + 5 src adr.
-  var src = (data[3]<<8)|data[4];
-  // 6 + 7 dest adr.
-  var dest = (data[5]<<8)|data[6];
-  var val = null;
-
-  // value is not coded with command 
-  // extra field
-  if(len === 9){
-    action = data[data.length-2];
-    input = input.toString(16);
+  if(self.parser) { 
+    self.parser.end();
   }
-  
-  switch(action&0xC0)  {
-    case 0x80:
-      action = 'Write';
-      val = input;
-
-      // decode command from value
-      if(len === 8) val = val-128;
-      break;
-    case 0x40:
-      action = 'Response';
-      val = input;
-
-      // decode command from value
-      if(len === 8) val = val-64;
-      break;
-    case 0x00:
-      action = 'Read';
-      break;
-  }
-
-  self.emit('data', action, src, dest, val);
-
 }
 
 /**
@@ -137,47 +78,24 @@ EIBConnection.prototype.__parseTelegram = function(data) {
 EIBConnection.prototype.openGroupSocket = function(writeOnly, callback) {
   
   var self = this;
+
   var arr = new Array(5);
-  
   arr[0] = 0;
   arr[1] = 38;
-  
   arr[2] = 0;
   arr[3] = 0;
+
   if(writeOnly != 0) {
     arr[4] = 0xff;
   } else {
     arr[4] = 0x00;
   }
 
-  self.on('data', callback)
-
-  self.socket.on('data', function(data) {
-    var offset = 1;
-    while(offset < data.length) {
-     
-      var len = data[offset];
-      if(len === 8 || len === 9) {
-        if(offset+len < data.length) {
-          var telegram = data.slice(offset, offset+len+1);
-
-          offset += len;
-          //filling zeroes following..
-          offset += 2;
-
-          // data length
-          self.__parseTelegram(telegram);
-        } else {
-          offset = data.length+1;
-        }
-      } else {
-        offset = data.length+1;
-      }
-    }
-    
-  });
-
   self.sendRequest(arr);
+
+  self.parser = new parser(self.socket);
+  
+  if(callback) callback(self.parser);
 
 }
 
@@ -260,9 +178,6 @@ EIBConnection.prototype.sendRequest = function(input, callback) {
   self.socket.write(buf, callback);
 
 }
-
-EIBConnection.prototype.str2addr = tools.str2addr;
-EIBConnection.prototype.addr2str = tools.addr2str;
 
 function init() {
   var e = new EIBConnection();

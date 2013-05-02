@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-var eibd = require('../main');
+var eibd = require('../main'),
+    tools = require('../tools');
 /**
  * groupwrite
  * send a group write telegram to a group address (for values with more than 6 bit width)
@@ -8,7 +9,7 @@ function groupwrite(opts, gad, value, callback) {
   
   var conn = eibd();
 
-  var address = conn.str2addr(gad);
+  var address = tools.str2addr(gad);
 
   conn.socketRemote(opts, function() {
     conn.openTGroup(address, 1, function (err) {

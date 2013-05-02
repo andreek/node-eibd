@@ -21,8 +21,11 @@ function TestServer(port, callback) {
 }
 
 TestServer.prototype.end = function(callback) {
+
   if(this.server) {
-    this.server.close(callback);
+    this.server.close(function() {
+      if(callback) callback();
+    });
   } else {
     if(callback) callback();
   }

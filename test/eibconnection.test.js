@@ -1,4 +1,5 @@
 var assert = require('assert'),
+    tools = require('../tools'),
     eibd = require('../main');
 
 var port = 6721
@@ -15,7 +16,7 @@ describe('EIBConnection', function() {
   });
 
   afterEach(function(done) {
-    server.end(); 
+    if(server) server.end(); 
     done();
   });
 
@@ -29,10 +30,11 @@ describe('EIBConnection', function() {
     }),
     it('should catch error if server is not reachable', function(done) {
       server.end();
+      server = null;
       var conn = new eibd();
       conn.socketRemote(opts, function(err) {
+        console.log('fooo..');
         assert.equal(err.code, 'ECONNREFUSED');
-        server = new TestServer(port);
         done();
       });
     }),
@@ -50,7 +52,7 @@ describe('EIBConnection', function() {
     it('should work without error', function(done) {
       var conn = new eibd();
       conn.socketRemote(opts, function() {
-        var dest = conn.str2addr('0/1/0');
+        var dest = tools.str2addr('0/1/0');
         conn.openTGroup(dest, 0, function(err) {
           assert.equal(null, err);
           done(); 
@@ -81,24 +83,27 @@ describe('EIBConnection', function() {
     }); 
   }),
   describe('openGroupSocket', function() {
-    it('should get called three times', function(done) {
+    it('should get called', function(done) {
       var conn = new eibd();
       conn.socketRemote(opts, function() {
         var i = 0;
-        conn.openGroupSocket(0, function(action, src, dest, val) {
-          i++;
-          if(i === 2) done();  
+        conn.openGroupSocket(0, function(parser) {
+          
+          parser.on('read', function(src, dest, val) {
+            i++;
+            if(i === 2) done();  
+          });
+          // send command for socket listen
+          var groupswrite = new eibd();
+          groupswrite.socketRemote(opts, function() {
+            var dest = tools.str2addr('0/1/0');
+            groupswrite.openTGroup(dest, 1, function(err) {
+              groupswrite.sendAPDU([0, 0xff&1]);
+            });
+          });
         });
       });
 
-      // send command for socket listen
-      var groupswrite = new eibd();
-      groupswrite.socketRemote(opts, function() {
-        var dest = conn.str2addr('0/1/0');
-        groupswrite.openTGroup(dest, 1, function(err) {
-          groupswrite.sendAPDU([0, 0xff&1]);
-        });
-      });
     })
   })
 });
