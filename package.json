@@ -10,7 +10,7 @@
   "engines": {
     "node": ">=0.10.0"
   },
-  "bin": {
+  "bin": {
     "groupread": "./bin/groupread",
     "groupsocketlisten": "./bin/groupsocketlisten",
     "groupswrite": "./bin/groupswrite",
