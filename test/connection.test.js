@@ -1,6 +1,5 @@
 var assert = require('assert'),
-    tools = require('../tools'),
-    eibd = require('../main');
+    eibd = require('../');
 
 var port = 6721
 var opts = { host: 'localhost', port: port }
@@ -22,7 +21,7 @@ describe('EIBConnection', function() {
 
   describe('socketRemote', function() {
     it('should open a connection', function(done) {
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       conn.socketRemote(opts, function() {
         assert.equal(true, true);
         done();
@@ -31,15 +30,14 @@ describe('EIBConnection', function() {
     it('should catch error if server is not reachable', function(done) {
       server.end();
       server = null;
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       conn.socketRemote(opts, function(err) {
-        console.log('fooo..');
         assert.equal(err.code, 'ECONNREFUSED');
         done();
       });
     }),
     it('should notice if host or port is not given', function(done) {
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       try {
         conn.socketRemote(port);
       } catch(err) {
@@ -50,9 +48,9 @@ describe('EIBConnection', function() {
   }),
   describe('openTGroup', function() {
     it('should work without error', function(done) {
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       conn.socketRemote(opts, function() {
-        var dest = tools.str2addr('0/1/0');
+        var dest = eibd.str2addr('0/1/0');
         conn.openTGroup(dest, 0, function(err) {
           assert.equal(null, err);
           done(); 
@@ -62,7 +60,7 @@ describe('EIBConnection', function() {
   }),
   describe('sendAPDU', function() {
     it('should work without error', function(done) {
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       conn.socketRemote(opts, function() {
         conn.sendAPDU([0,0],function(err) {
           assert.equal(undefined, err);
@@ -73,7 +71,7 @@ describe('EIBConnection', function() {
   }),
   describe('sendRequest', function() {
     it('should work without error', function(done) {
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       conn.socketRemote(opts, function() {
         conn.sendRequest([0,0],function(err) {
           assert.equal(undefined, err);
@@ -84,7 +82,7 @@ describe('EIBConnection', function() {
   }),
   describe('openGroupSocket', function() {
     it('should get called', function(done) {
-      var conn = new eibd();
+      var conn = new eibd.Connection();
       conn.socketRemote(opts, function() {
         var i = 0;
         conn.openGroupSocket(0, function(parser) {
@@ -94,9 +92,9 @@ describe('EIBConnection', function() {
             if(i === 2) done();  
           });
           // send command for socket listen
-          var groupswrite = new eibd();
+          var groupswrite = new eibd.Connection();
           groupswrite.socketRemote(opts, function() {
-            var dest = tools.str2addr('0/1/0');
+            var dest = eibd.str2addr('0/1/0');
             groupswrite.openTGroup(dest, 1, function(err) {
               groupswrite.sendAPDU([0, 0xff&1]);
             });

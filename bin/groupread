@@ -1,18 +1,18 @@
 #!/usr/bin/env node
-var tools = require('../tools');
+var eibd = require('../');
 /**
  * groupread
  */
 function groupread(opts, gad, callback) {
  
-  var eibd = require('../main')();
+  var conn = new eibd.Connection();
 
 
-  eibd.socketRemote(opts, function() {
+  conn.socketRemote(opts, function() {
     
-    var address = tools.str2addr(gad);
+    var address = eibd.str2addr(gad);
     
-    eibd.openTGroup(address, 0, function (err) {
+    conn.openTGroup(address, 0, function (err) {
 
       if(err) {
         callback(err);
@@ -21,7 +21,7 @@ function groupread(opts, gad, callback) {
         value[0] = 0;
         value[1] = 0;
 
-        eibd.sendAPDU(value, callback);
+        conn.sendAPDU(value, callback);
       }
   
     });

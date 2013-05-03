@@ -1,14 +1,15 @@
 #!/usr/bin/env node
+var eibd = require('../');
 /**
  * groupsocketlisten
  */
 function groupsocketlisten(opts, callback) {
 
-  var eibd = require('../main')();
+  var conn = eibd.Connection();
 
-  eibd.socketRemote(opts, function() {
+  conn.socketRemote(opts, function() {
     
-    eibd.openGroupSocket(0, callback);
+    conn.openGroupSocket(0, callback);
 
   });
 

@@ -2,7 +2,7 @@
  * simple test server
  */
 var net = require('net'),
-    tools = require('../../tools');
+    tools = require('../../lib/tools');
 
 function TestServer(port, callback) {
 
