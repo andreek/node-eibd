@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var eibd = require('../');,
+var eibd = require('../');
 /**
  * groupswrite
  * send a group write telegram to a group address (for values with less than 6 bit width)
