@@ -80,6 +80,13 @@ Sends TCP/IP request to eib-daemon
 
 Parse telegram and emits 'write', 'response' or 'read' events.
 
+### Parser.parseValue(len, telegram)
+
+Try to parse values with assumptions about package len.
+
+### Parse.encodeEIS5(buffer)
+
+Parse value to EIS 5 / DPT 9.xxx from buffer
 
 ### str2addr(str);
 
