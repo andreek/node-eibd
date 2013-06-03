@@ -5,7 +5,7 @@
   "main": "./index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/andrek/node-eibd"
+    "url": "https://github.com/andreek/node-eibd"
   },
   "engines": {
     "node": ">=0.10.0"
