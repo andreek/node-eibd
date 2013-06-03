@@ -32,27 +32,7 @@ TestServer.prototype.end = function(callback) {
 }
 
 TestServer.prototype.noticeSockets = function(req, dest, src, action, value) {
-//  var buf = new Array(10);
-//  if(value) buf = new Array(11);
-
   var buf = new Buffer([0,8,0,27,0,0,2,1,0,0,0,8,0,27,0,0,0,1,0,0,0,9,0,27,11,8,11,4,0,40,0]);
-/*buf[0] = 0;
-  buf[1] = 8;
-  buf[2] = 0;
-  buf[3] = req;
-  buf[4] = (dest>>8)&0xff;
-  buf[5] = dest&0xff;
-  buf[6] = (src>>8)&0xff;
-  buf[7] = src&0xff;
-  buf[8] = 0;
-  buf[9] = action&0xff;
-  
-  if(value) {
-    buf[1] = 9;
-    buf[10] = value;
-  }
-
-  buf = tools.pack(buf);*/
   for(var i in this.groupSockets) {
     var socket = this.groupSockets[i];
     socket.write(buf);
