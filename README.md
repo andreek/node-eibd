@@ -10,6 +10,12 @@ npm install eibd
   
 npm test
 
+## Supported Datatypes
+
+ * EIS 1 / DPT 1.xxx
+ * EIS 5 / DPT 9.xxx
+ * EIS 6 / DPT 5.xxx
+
 ## CLI Usage
 
 ### groupwrite
