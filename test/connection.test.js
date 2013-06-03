@@ -86,8 +86,7 @@ describe('EIBConnection', function() {
       conn.socketRemote(opts, function() {
         var i = 0;
         conn.openGroupSocket(0, function(parser) {
-          
-          parser.on('read', function(src, dest, val) {
+          parser.on('read', function(src, dest) {
             i++;
             if(i === 2) done();  
           });
