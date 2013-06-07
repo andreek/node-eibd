@@ -20,5 +20,11 @@
     "mocha": "*"
   },
   "author": "Andree Klattenhoff",
-  "scripts": { "test": "mocha -R list ./test" }
+  "scripts": { "test": "mocha -R list ./test" },
+  "licenses" : [
+      {   
+          "type" : "GPL"
+        , "url" : "http://github.com/andreek/node-eibd/LICENSE"
+      }
+  ]
 }
