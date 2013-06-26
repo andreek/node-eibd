@@ -2,7 +2,7 @@ var assert = require('assert'),
     Encoder = require('../lib/encoder.js');
 
 var enc = null;
-var bufferEIS5 = [];
+
 describe('Encoder', function() {
 
   before(function(done) {
@@ -47,6 +47,20 @@ describe('Encoder', function() {
       buf.writeUInt8(151, 1);
       enc.encode(9, buf, function(err, type, value) {
         assert.equal(err.message, 'Invalid data len for DPT5');
+        done();
+      });
+    });
+  });
+
+  describe('DPT9', function() {
+    it('should encode DPT9 value', function(done) {
+      var buf = new Buffer(2);
+      buf.writeUInt8(0xa1, 0);
+      buf.writeUInt8(0x44, 1);
+      enc.encode(10, buf, function(err, type, value) {
+        assert.equal(err, null);
+        assert.equal(type, 'DPT9');
+        assert.equal(parseInt(value), -275);
         done();
       });
     });
