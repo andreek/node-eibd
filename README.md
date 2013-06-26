@@ -1,4 +1,4 @@
-# eibd
+# eibd [![Build Status](https://secure.travis-ci.org/andreek/node-eibd.png?branch=master)](http://travis-ci.org/andreek/node-eibd)
 
 A Node.js client for eib/knx daemon. Implements all functions of eibd client library needed for groupswrite/groupwrite, groupread and groupsocketlisten.
 
