@@ -23,12 +23,12 @@ if(!host || !port) {
 } else {
   groupsocketlisten({ host: host, port: port }, function(parser) {
 
-    parser.on('write', function(src, dest, val){
-      console.log('Write from '+src+' to '+dest+': '+val);
+    parser.on('write', function(src, dest, type, val){
+      console.log('Write from '+src+' to '+dest+': '+val+' ['+type+']');
     });
 
-    parser.on('response', function(src, dest, val) {
-      console.log('Response from '+src+' to '+dest+': '+val);
+    parser.on('response', function(src, dest, type, val) {
+      console.log('Response from '+src+' to '+dest+': '+val+' ['+type+']');
     });
     
     parser.on('read', function(src, dest) {
