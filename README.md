@@ -13,8 +13,20 @@ npm test
 ## Supported Datatypes
 
  * EIS 1 / DPT 1.xxx
+ * EIS 2 / DPT 3.xxx
+ * EIS 3 / DPT 10.xxx
+ * EIS 4 / DPT 11.xxx
  * EIS 5 / DPT 9.xxx
  * EIS 6 / DPT 5.xxx
+ * EIS 8 / DPT 2.xxx
+ * EIS 9 / DPT 14.xxx
+ * EIS 10.000 / DPT 7.xxx
+ * EIS 10.001 / DPT 8.xxx
+ * EIS 11 / DPT 12.xxx
+ * EIS 11.001 / DPT 3.xxx
+ * EIS 13 / DPT 4.xxx
+ * EIS 14 / DPT 6.xxx
+ * EIS 15 / DPT 16.xxx
 
 ## CLI Usage
 
