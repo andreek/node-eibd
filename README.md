@@ -137,7 +137,7 @@ var port = 6720;
 
 groupsocketlisten({ host: host, port: port }, function(parser) {
 
-  parser.on('write', function(src, dest, val){
+  parser.on('write', function(src, dest, dpt, val){
     console.log('Write from '+src+' to '+dest+': '+val);
   });
 
