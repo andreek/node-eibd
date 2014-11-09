@@ -69,6 +69,17 @@ describe('EIBConnection', function() {
       });
     });
   }),
+  describe('sendAPDU DPT9 4Byte', function() {
+    it('should work without error', function(done) {
+      var conn = new eibd.Connection();
+      conn.socketRemote(opts, function() {
+        conn.sendAPDU([0,0,0,0],function(err) {
+          assert.equal(undefined, err);
+          done();
+        });
+      });
+    });
+  }),
   describe('sendRequest', function() {
     it('should work without error', function(done) {
       var conn = new eibd.Connection();
