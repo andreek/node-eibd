@@ -10,19 +10,9 @@ describe('Encoder', function() {
     done();
   });
   
-     describe('DPT1 encode', function() {
-    it('should encode DPT1 value', function(done) {
-      var buffer = enc.encodeDPT5(true);
-      assert.equal(buffer.readUInt8(0), 0x01);
-      buffer = enc.encodeDPT5(false);
-      assert.equal(buffer.readUInt8(0), 0x00);
-      done();
-    });
-  });
-  
    describe('DPT5 encode', function() {
     it('should encode DPT5 value', function(done) {
-      var buffer = enc.encodeDPT5(40);
+      var buffer = enc.encode('DPT5',40);
       assert.equal(buffer.readUInt8(0), 40);
       done();
     });
@@ -30,11 +20,11 @@ describe('Encoder', function() {
   
   describe('DPT9 encode', function() {
     it('should encode DPT9 value', function(done) {
-      var buffer = enc.encodeDPT9(40);
+      var buffer = enc.encode('DPT9',40);
       var value = buffer.readUInt16BE(0);
       assert.equal(value, 0x13e8);
       
-      buffer = enc.encodeDPT9(50);
+      buffer = enc.encode('DPT9.001',50);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0x14e2);
       
@@ -42,7 +32,7 @@ describe('Encoder', function() {
     });
     
     it('should encode DPT9 floating value', function(done) {
-      var buffer = enc.encodeDPT9(20.2);
+      var buffer = enc.encode('DPT9',20.2);
       var value = buffer.readUInt16BE(0);
       assert.equal(value, 0x11F9);
       
@@ -75,6 +65,13 @@ describe('Encoder', function() {
       assert.equal(value, 0x9781);
       done();
     });
+      
+    it('should not encode DPTNOTIMPLEMENTED', function(done) {
+      var buffer = enc.encode('DPTNOTIMPLEMENTED', -5.08);
+      assert.equal(buffer, undefined);
+      done();
+    });
+       
   });
   
 });

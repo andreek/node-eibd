@@ -8,9 +8,7 @@ function groupsocketlisten(opts, callback) {
   var conn = eibd.Connection();
 
   conn.socketRemote(opts, function() {
-    
     conn.openGroupSocket(0, callback);
-
   });
 
 }
