@@ -1,6 +1,6 @@
 {
   "name": "eibd",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "node eibd client",
   "main": "./index",
   "repository": {
@@ -20,11 +20,20 @@
     "mocha": "*"
   },
   "author": "Andree Klattenhoff",
+  "contributors": [
+        { "name": "Dries Verbrugge" }
+  ],
   "scripts": { "test": "mocha -R list ./test" },
   "licenses" : [
       {   
           "type" : "GPL"
         , "url" : "http://github.com/andreek/node-eibd/LICENSE"
       }
-  ]
+  ],
+  "keywords": [
+        "knx", "eibd", "house automation"
+  ],
+  "bugs": { 
+        "url" : "http://github.com/andreel/node-eibd/issues" 
+  }
 }
