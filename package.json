@@ -11,8 +11,11 @@
     "node": ">=0.10.0"
   },
   "bin": {
-    "groupsend": "./bin/groupsend",
-    "groupsocketlisten": "./bin/groupsocketlisten"
+    "groupread": "./bin/groupread",
+    "groupsocketlisten": "./bin/groupsocketlisten",
+    "groupswrite": "./bin/groupswrite",
+    "groupwrite": "./bin/groupwrite",
+    "groupsend": "./bin/groupsend"
   },
   "devDependencies": {
     "mocha": "*"
