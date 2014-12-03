@@ -1,6 +1,22 @@
 #!/usr/bin/env node
+
+'use strict';
+
 var eibd = require('../');
 
+/**
+ * groupsend
+ * Send a KNX telegram with support for read/write/response messages and DPT1, DPT2, DPT3, DPT5, DPT9 data format
+ * Contains functionality from groupread/groupwrite/groupswrite in one cmd line application
+ *
+ * Arguments: host port gad action dpt value 
+ * host = ipadress (Ex. 127.0.0.1 - localhost - host.com)5
+ * port = portnumber (Ex. 6720)
+ * gad = groupnumber (Ex. 1/2/34)
+ * action = eibd action (read , write or response)
+ * dpt = data point type for write/response (Ex. DPT1, DPT2, DPT3, DPT5, DPT9)
+ * value = data value for write/response (Ex. true , 23 , 12.23)
+ */
 function send(opts, gad, action, dpt, value, callback) { 
   var conn = new eibd.Connection();
   conn.socketRemote(opts, function() {
@@ -29,13 +45,13 @@ if(!host || !port) {
   argumentsError = '[ERROR] No hostname or port';
 } else if(!gad) {
   argumentsError = '[ERROR] No gad given';
-} else if(!action || action != 'response' && action != 'read' && action != 'write') {
+} else if(!action || action !== 'response' && action !== 'read' && action !== 'write') {
   argumentsError = '[ERROR] Wrong action, should be read,write or response';
-} else if(!dpt && action != 'read') {
+} else if(!dpt && action !== 'read') {
   argumentsError = '[ERROR] Response and write action require a DPT value';
-} else if (action != 'read' && dpt.indexOf('DPT1') != 0 && dpt.indexOf('DPT5') != 0 && dpt.indexOf('DPT9') != 0) {
+} else if (action !== 'read' && dpt.indexOf('DPT1') !== 0 && dpt.indexOf('DPT5') !== 0 && dpt.indexOf('DPT9') !== 0) {
   argumentsError = '[ERROR] Wrong DPT, only DPT1, DPT5 and DPT9 are implemented';
-} else if(!value && (action == 'response' || action == 'write')) {
+} else if(!value && (action === 'response' || action === 'write')) {
   argumentsError = '[ERROR] Response and write actions require a value';
 }
 
@@ -46,13 +62,12 @@ if(argumentsError) {
   console.log('port = portnumber (Ex. 6720)');
   console.log('gad = groupnumber (Ex. 1/2/34)');
   console.log('action = eibd action (read , write or response)');
-  console.log('dpt = data point type (Ex. DPT1 - DPT5 - DPT9)');
+  console.log('dpt = data point type (Ex. DPT1, DPT2, DPT3, DPT5, DPT9)');
   console.log('value = data value for write/response (Ex. true , 23 , 12.23)');
 } else {
   send({ host: host, port: port }, gad, action, dpt, value, function(err) {
-  if(err) {
-    console.error('[ERROR]'+err);
-  } 
-});
+    if(err) {
+      console.error('[ERROR]'+err);
+    } 
+  });
 }
-;

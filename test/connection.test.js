@@ -1,8 +1,10 @@
+'use strict';
+
 var assert = require('assert'),
     eibd = require('../');
 
-var port = 6721
-var opts = { host: 'localhost', port: port }
+var port = 6721;
+var opts = { host: 'localhost', port: port };
 var TestServer = new require('./support/server');
 var server = null;
 
@@ -15,7 +17,9 @@ describe('EIBConnection', function() {
   });
 
   afterEach(function(done) {
-    if(server) server.end(); 
+    if(server) {
+        server.end(); 
+    }
     done();
   });
 
@@ -56,7 +60,7 @@ describe('EIBConnection', function() {
           done(); 
         });
       });
-    })
+    });
   }),
   describe('sendAPDU', function() {
     it('should work without error', function(done) {
@@ -97,21 +101,23 @@ describe('EIBConnection', function() {
       conn.socketRemote(opts, function() {
         var i = 0;
         conn.openGroupSocket(0, function(parser) {
-          parser.on('read', function(src, dest) {
+          parser.on('read', function() {
             i++;
-            if(i === 2) done();  
+            if(i === 2) {
+                done();  
+            }
           });
           // send command for socket listen
           var groupswrite = new eibd.Connection();
           groupswrite.socketRemote(opts, function() {
             var dest = eibd.str2addr('0/1/0');
-            groupswrite.openTGroup(dest, 1, function(err) {
+            groupswrite.openTGroup(dest, 1, function() {
               groupswrite.sendAPDU([0, 0xff&1]);
             });
           });
         });
       });
 
-    })
-  })
+    });
+  });
 });
