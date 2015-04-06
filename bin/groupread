@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+'use strict';
+
 var eibd = require('../');
 /**
  * groupread
@@ -17,13 +20,9 @@ function groupread(opts, gad, callback) {
       if(err) {
         callback(err);
       } else {
-        var value = new Array(2);
-        value[0] = 0;
-        value[1] = 0;
-
-        conn.sendAPDU(value, callback);
+        var msg = eibd.createMessage('read');
+        conn.sendAPDU(msg, callback);
       }
-  
     });
 
   });

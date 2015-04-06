@@ -14,7 +14,8 @@
     "groupread": "./bin/groupread",
     "groupsocketlisten": "./bin/groupsocketlisten",
     "groupswrite": "./bin/groupswrite",
-    "groupwrite": "./bin/groupwrite"
+    "groupwrite": "./bin/groupwrite",
+    "groupsend": "./bin/groupsend"
   },
   "devDependencies": {
     "mocha": "*"

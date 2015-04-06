@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+'use strict';
+
 var eibd = require('../');
 /**
  * groupsocketlisten
@@ -8,9 +11,7 @@ function groupsocketlisten(opts, callback) {
   var conn = eibd.Connection();
 
   conn.socketRemote(opts, function() {
-    
     conn.openGroupSocket(0, callback);
-
   });
 
 }

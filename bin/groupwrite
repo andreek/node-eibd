@@ -1,8 +1,11 @@
 #!/usr/bin/env node
+
+'use strict';
+
 var eibd = require('../');
 /**
  * groupwrite
- * send a group write telegram to a group address (for values with more than 6 bit width)
+ * send a group write telegram to a group address (for DPT5 values)
  */
 function groupwrite(opts, gad, value, callback) {
   
@@ -16,12 +19,8 @@ function groupwrite(opts, gad, value, callback) {
       if(err) {
         callback(err);
       } else {
-        var data = new Array(3);
-        data[0] = 0;
-        data[1] = 0x80; 
-        data[2] = (0xff & value);
-      
-        conn.sendAPDU(data, callback);
+      var msg = eibd.createMessage('write', 'DPT5', parseInt(value));
+      conn.sendAPDU(msg, callback);
       }
 
     });

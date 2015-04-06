@@ -1,8 +1,8 @@
+'use strict';
 /**
  * simple test server
  */
-var net = require('net'),
-    tools = require('../../lib/tools');
+var net = require('net');
 
 function TestServer(port, callback) {
 
@@ -24,24 +24,28 @@ TestServer.prototype.end = function(callback) {
 
   if(this.server) {
     this.server.close(function() {
-      if(callback) callback();
+      if(callback) {
+          callback();
+      }
     });
   } else {
-    if(callback) callback();
+    if(callback) {
+        callback();
+    }
   }
-}
+};
 
-TestServer.prototype.noticeSockets = function(req, dest, src, action, value) {
+TestServer.prototype.noticeSockets = function() {
   var buf = new Buffer([0,8,0,27,0,0,2,1,0,0,0,8,0,27,0,0,0,1,0,0,0,9,0,27,11,8,11,4,0,40,0]);
   for(var i in this.groupSockets) {
     var socket = this.groupSockets[i];
     socket.write(buf);
   }
-}
+};
 
 TestServer.prototype.onData = function(socket, buf) {
 
-  var arr = new Array();
+  var arr = [];
   for(var i = 0;  i < buf.length; i++) {
     var val = buf.readUInt8(i);
     arr.push(val);
@@ -53,7 +57,8 @@ TestServer.prototype.onData = function(socket, buf) {
     
     var req = arr[3];
     var action = arr[5];
-      
+    var dest = (arr[4]<<8)|arr[5];
+    
     switch(req) {
       case 38:
         this.groupSockets.push(socket);
@@ -71,7 +76,7 @@ TestServer.prototype.onData = function(socket, buf) {
         }
         break;
       case 34:
-        var dest = (arr[4]<<8)|arr[5];
+        
         var data = [0, 2, 0, 34];
         var buf = new Buffer(data);
         var self = this;
@@ -85,6 +90,6 @@ TestServer.prototype.onData = function(socket, buf) {
 
   }
 
-}
+};
 
 module.exports = TestServer;
