@@ -23,6 +23,7 @@
   "author": "Andree Klattenhoff",
   "contributors": [
         { "name": "Dries Verbrugge" }
+     ,  { "name": "Andreas Monitzer" }
   ],
   "scripts": { "test": "mocha -R list ./test" },
   "licenses" : [
