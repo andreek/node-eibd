@@ -1,6 +1,6 @@
 {
   "name": "eibd",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "node eibd client",
   "main": "./index",
   "repository": {
@@ -24,6 +24,8 @@
   "contributors": [
         { "name": "Dries Verbrugge" }
      ,  { "name": "Andreas Monitzer" }
+     ,  { "name": "Raoul" }
+     ,  { "name": "Marco Piraccini" }
   ],
   "scripts": { "test": "mocha -R list ./test" },
   "licenses" : [
