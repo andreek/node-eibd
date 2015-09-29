@@ -124,7 +124,7 @@ describe('Encoder', function() {
       var minutes = 43
       var seconds = 5;
 
-      var buffer = enc.encodeDPT10([dayOfTheWeek, hour, minutes, seconds]);
+      var buffer = enc.encode('DPT10', [dayOfTheWeek, hour, minutes, seconds]);
       var value0 = buffer.readUInt8(0); // Read the first octect
       var value1 = buffer.readUInt8(1); // Read the second octect
       var value2 = buffer.readUInt8(2);  // Read the third octect
@@ -144,7 +144,7 @@ describe('Encoder', function() {
       var month = 10; // 10 day  -> A
       var year = 14 // 14 -> 0xE -> 00001110
 
-      var buffer = enc.encodeDPT11([day, month, year]);
+      var buffer = enc.encode('DPT11', [day, month, year]);
       var value0 = buffer.readUInt8(0); // Read the first octect
       var value1 = buffer.readUInt8(1); // Read the second octect
       var value2 = buffer.readUInt8(2);  // Read the third octect
