@@ -82,29 +82,29 @@ describe('Encoder', function() {
       var value = buffer.readUInt16BE(0);
       assert.equal(value, 0x07E4); // was 0x11F9
 
-      buffer = enc.encodeDPT9(20.2);
+      buffer = enc.encode('DPT9',20.2);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0x07E4);
     });
 
     it('should encode DPT9 negative value', function() {
-      var buffer = enc.encodeDPT9(-100.32);
+      var buffer = enc.encode('DPT9',-100.32);
       var value = buffer.readUInt16BE(0);
       assert.equal(value, 0x9B1A);
 
-      buffer = enc.encodeDPT9(-175.84);
+      buffer = enc.encode('DPT9',-175.84);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0xA3B5);
 
-      buffer = enc.encodeDPT9(-199.52);
+      buffer = enc.encode('DPT9',-199.52);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0xA321);
 
-      buffer = enc.encodeDPT9(-200.32);
+      buffer = enc.encode('DPT9',-200.32);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0xA31C); // was: 0xB6C7
 
-      buffer = enc.encodeDPT9(-5.08);
+      buffer = enc.encode('DPT9',-5.08);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0x8604);
     });
