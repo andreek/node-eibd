@@ -70,7 +70,7 @@ describe('Encoder', function() {
     it('should encode DPT9 value', function() {
       var buffer = enc.encode('DPT9',40);
       var value = buffer.readUInt16BE(0);
-      assert.equal(value, 0x13e8);
+      assert.equal(value, 0x0FD0); // was: 0x13e8
 
       buffer = enc.encode('DPT9.001',50);
       value = buffer.readUInt16BE(0);
@@ -80,33 +80,33 @@ describe('Encoder', function() {
     it('should encode DPT9 floating value', function() {
       var buffer = enc.encode('DPT9',20.2);
       var value = buffer.readUInt16BE(0);
-      assert.equal(value, 0x11F9);
+      assert.equal(value, 0x07E4); // was 0x11F9
 
-      buffer = enc.encodeDPT9(20.2, 4);
+      buffer = enc.encodeDPT9(20.2);
       value = buffer.readUInt16BE(0);
-      assert.equal(value, 0x207E);
+      assert.equal(value, 0x07E4);
     });
 
     it('should encode DPT9 negative value', function() {
-      var buffer = enc.encodeDPT9(-100.32, 4);
+      var buffer = enc.encodeDPT9(-100.32);
       var value = buffer.readUInt16BE(0);
-      assert.equal(value, 0xA58D);
+      assert.equal(value, 0x9B1A);
 
-      buffer = enc.encodeDPT9(-175.84, 4);
+      buffer = enc.encodeDPT9(-175.84);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0xA3B5);
 
-      buffer = enc.encodeDPT9(-199.52, 4);
+      buffer = enc.encodeDPT9(-199.52);
       value = buffer.readUInt16BE(0);
       assert.equal(value, 0xA321);
 
-      buffer = enc.encodeDPT9(-200.32, 6);
+      buffer = enc.encodeDPT9(-200.32);
       value = buffer.readUInt16BE(0);
-      assert.equal(value, 0xB6C7);
+      assert.equal(value, 0xA31C); // was: 0xB6C7
 
       buffer = enc.encodeDPT9(-5.08);
       value = buffer.readUInt16BE(0);
-      assert.equal(value, 0x9781);
+      assert.equal(value, 0x8604);
     });
 
     it('should not encode DPTNOTIMPLEMENTED', function() {
@@ -121,7 +121,7 @@ describe('Encoder', function() {
 
       var dayOfTheWeek = 2; // Tuesday -> 010
       var hour = 10; // 10 AM  ->  01010
-      var minutes = 43
+      var minutes = 43;
       var seconds = 5;
 
       var buffer = enc.encode('DPT10', [dayOfTheWeek, hour, minutes, seconds]);
@@ -142,7 +142,7 @@ describe('Encoder', function() {
 
       var day = 2; // February -> 010
       var month = 10; // 10 day  -> A
-      var year = 14 // 14 -> 0xE -> 00001110
+      var year = 14; // 14 -> 0xE -> 00001110
 
       var buffer = enc.encode('DPT11', [day, month, year]);
       var value0 = buffer.readUInt8(0); // Read the first octect
