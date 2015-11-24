@@ -8,20 +8,27 @@ var eibd = require('../');
  * send a group write telegram to a group address (upto DPT3 values)
  */
 function groupswrite(opts, gad, value, callback) {
-  
+
   var conn = eibd.Connection();
 
   var address = eibd.str2addr(gad);
 
-  conn.socketRemote(opts, function() {
+  conn.socketRemote(opts, function(err) {
+
+    if(err) {
+      callback(err);
+      return;
+    }
+
     conn.openTGroup(address, 1, function (err) {
 
       if(err) {
         callback(err);
-      } else {
+        return;
+      }
+
       var msg = eibd.createMessage('write', 'DPT3', parseInt(value));
       conn.sendAPDU(msg, callback);
-      }
 
     });
   });

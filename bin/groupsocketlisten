@@ -10,8 +10,15 @@ function groupsocketlisten(opts, callback) {
 
   var conn = eibd.Connection();
 
-  conn.socketRemote(opts, function() {
+  conn.socketRemote(opts, function(err) {
+
+    if(err) {
+      callback(err);
+      return;
+    }
+
     conn.openGroupSocket(0, callback);
+
   });
 
 }
@@ -22,19 +29,25 @@ var port = process.argv[3];
 if(!host || !port) {
   console.error('[ERROR] No hostname or port');
 } else {
-  groupsocketlisten({ host: host, port: port }, function(parser) {
+  groupsocketlisten({ host: host, port: port }, function(err, parser) {
 
-    parser.on('write', function(src, dest, type, val){
-      console.log('Write from '+src+' to '+dest+': '+val+' ['+type+']');
-    });
+    if(!err) {
 
-    parser.on('response', function(src, dest, type, val) {
-      console.log('Response from '+src+' to '+dest+': '+val+' ['+type+']');
-    });
-    
-    parser.on('read', function(src, dest) {
-      console.log('Read from '+src+' to '+dest);
-    });
+      parser.on('write', function(src, dest, type, val){
+        console.log('Write from '+src+' to '+dest+': '+val+' ['+type+']');
+      });
+
+      parser.on('response', function(src, dest, type, val) {
+        console.log('Response from '+src+' to '+dest+': '+val+' ['+type+']');
+      });
+      
+      parser.on('read', function(src, dest) {
+        console.log('Read from '+src+' to '+dest);
+      });
+
+    } else {
+      console.error('[ERROR] '+err);
+    }
   
   });
 }
