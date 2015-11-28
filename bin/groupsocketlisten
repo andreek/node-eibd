@@ -21,6 +21,10 @@ function groupsocketlisten(opts, callback) {
 
   });
 
+  einbdcon.on('close', function () {
+    //restart...
+    setTimeout(function () { groupsocketlisten(opts, callback); }, 100);
+  });
 }
 
 var host = process.argv[2];
