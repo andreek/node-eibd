@@ -21,7 +21,7 @@ function groupsocketlisten(opts, callback) {
 
   });
 
-  einbdcon.on('close', function () {
+  conn.on('close', function () {
     //restart...
     setTimeout(function () { groupsocketlisten(opts, callback); }, 100);
   });
