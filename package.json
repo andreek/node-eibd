@@ -1,6 +1,6 @@
 {
   "name": "eibd",
-  "version": "0.3.1",
+  "version": "0.3.4",
   "description": "node eibd client",
   "main": "./index",
   "repository": {
@@ -26,6 +26,7 @@
      ,  { "name": "Andreas Monitzer" }
      ,  { "name": "Raoul" }
      ,  { "name": "Marco Piraccini" }
+     ,  { "name": "stasee" }
   ],
   "scripts": { "test": "mocha -R list ./test" },
   "licenses" : [

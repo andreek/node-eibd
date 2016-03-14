@@ -11,18 +11,25 @@ function groupread(opts, gad, callback) {
   var conn = new eibd.Connection();
 
 
-  conn.socketRemote(opts, function() {
-    
+  conn.socketRemote(opts, function(err) {
+
+    if(err) {
+      callback(err);
+      return;
+    }
+
     var address = eibd.str2addr(gad);
     
     conn.openTGroup(address, 0, function (err) {
 
       if(err) {
         callback(err);
-      } else {
-        var msg = eibd.createMessage('read');
-        conn.sendAPDU(msg, callback);
+        return;
       }
+
+      var msg = eibd.createMessage('read');
+      conn.sendAPDU(msg, callback);
+
     });
 
   });

@@ -13,15 +13,22 @@ function groupwrite(opts, gad, value, callback) {
 
   var address = eibd.str2addr(gad);
 
-  conn.socketRemote(opts, function() {
+  conn.socketRemote(opts, function(err) {
+
+    if (err) {
+        callback(err);
+        return;
+    }
+
     conn.openTGroup(address, 1, function (err) {
 
       if(err) {
         callback(err);
-      } else {
+        return;
+      }
+
       var msg = eibd.createMessage('write', 'DPT5', parseInt(value));
       conn.sendAPDU(msg, callback);
-      }
 
     });
   });
@@ -40,7 +47,7 @@ if(!host || !port) {
 } else {
   groupwrite({ host: host, port: port}, gad, value, function(err) {
     if(err) {
-      console.error(err);
+      console.error('[ERROR] '+err);
     } 
   });
 }
