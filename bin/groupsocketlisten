@@ -17,7 +17,9 @@ function groupsocketlisten(opts, callback) {
       return;
     }
 
-    conn.openGroupSocket(0, callback);
+    conn.openGroupSocket(0, function(parser) {
+      callback(undefined, parser);
+    });
 
   });
 
