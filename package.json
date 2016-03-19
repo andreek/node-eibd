@@ -1,44 +1,70 @@
-{
-  "name": "eibd",
-  "version": "0.3.4",
-  "description": "node eibd client",
-  "main": "./index",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/andreek/node-eibd"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "bin": {
-    "groupread": "./bin/groupread",
-    "groupsocketlisten": "./bin/groupsocketlisten",
-    "groupswrite": "./bin/groupswrite",
-    "groupwrite": "./bin/groupwrite",
-    "groupsend": "./bin/groupsend"
-  },
-  "devDependencies": {
-    "mocha": "*"
-  },
-  "author": "Andree Klattenhoff",
-  "contributors": [
-        { "name": "Dries Verbrugge" }
-     ,  { "name": "Andreas Monitzer" }
-     ,  { "name": "Raoul" }
-     ,  { "name": "Marco Piraccini" }
-     ,  { "name": "stasee" }
-  ],
-  "scripts": { "test": "mocha -R list ./test" },
-  "licenses" : [
-      {   
-          "type" : "GPL"
-        , "url" : "http://github.com/andreek/node-eibd/LICENSE"
-      }
-  ],
-  "keywords": [
-        "knx", "eibd", "house automation"
-  ],
-  "bugs": { 
-        "url" : "http://github.com/andreek/node-eibd/issues" 
-  }
-}
+{ 
+	"name": "eibd", 
+	"version": "0.3.5", 
+	"description": "node eibd client", 
+	"main": "./index", 
+	"repository": { 
+		"type": "git", 
+		"url": "https://github.com/andreek/node-eibd"
+	 }, 
+
+	"engines": { 
+		"node": ">=0.10.0"
+	 }, 
+
+	"bin": { 
+		"groupread": "./bin/groupread", 
+		"groupsocketlisten": "./bin/groupsocketlisten", 
+		"groupswrite": "./bin/groupswrite", 
+		"groupwrite": "./bin/groupwrite", 
+		"groupsend": "./bin/groupsend"
+	 }, 
+
+	"devDependencies": { 
+		"mocha": "*"
+	 }, 
+
+	"author": "Andree Klattenhoff", 
+	"contributors": [ 
+		{ 
+			"name": "Dries Verbrugge"
+		 }, 
+
+		{ 
+			"name": "Andreas Monitzer"
+		 }, 
+
+		{ 
+			"name": "Raoul"
+		 }, 
+
+		{ 
+			"name": "Marco Piraccini"
+		 }, 
+
+		{ 
+			"name": "stasee"
+		 }
+	 ], 
+
+	"scripts": { 
+		"test": "mocha -R list ./test"
+	 }, 
+
+	"licenses": [ 
+		{ 
+			"type": "GPL", 
+			"url": "http://github.com/andreek/node-eibd/LICENSE"
+		 }
+	 ], 
+
+	"keywords": [ 
+		"knx", 
+		"eibd", 
+		"house automation"
+	 ], 
+
+	"bugs": { 
+		"url": "http://github.com/andreek/node-eibd/issues"
+	 }
+ }
