@@ -7,33 +7,24 @@ var eibd = require('../');
  * groupread
  */
 function groupread(opts, gad, callback) {
- 
-  var conn = new eibd.Connection();
+	var conn = new eibd.Connection();
+	conn.socketRemote(opts, function(err) {
 
+		if(err) {
+			callback(err);
+			return;
+		}
 
-  conn.socketRemote(opts, function(err) {
-
-    if(err) {
-      callback(err);
-      return;
-    }
-
-    var address = eibd.str2addr(gad);
-    
-    conn.openTGroup(address, 0, function (err) {
-
-      if(err) {
-        callback(err);
-        return;
-      }
-
-      var msg = eibd.createMessage('read');
-      conn.sendAPDU(msg, callback);
-
-    });
-
-  });
-
+		var address = eibd.str2addr(gad);
+		conn.openTGroup(address, 0, function (err) {
+			if(err) {
+				callback(err);
+				return;
+			}
+			var msg = eibd.createMessage('read');
+			conn.sendAPDU(msg, callback);
+		});
+	});
 }
 
 var host = process.argv[2];
@@ -41,13 +32,32 @@ var port = process.argv[3];
 var gad = process.argv[4];
 
 if(!host || !port) {
-  console.error('[ERROR] No hostname or port');
+	console.log('Usage:');
+	console.log('groupread <host> <port> <gad>');
+	console.log('Sends read request to the knxd listening on <host>:<port> for group address <gad>');
+	console.log('');
+	console.log('groupread --socket <path> <gad> <value>');
+	console.log('Sends read request to the local knxd listening on unix socket <path> for group address <gad>');
+	console.log('');
+	console.error('Parameter missing.');
 } else if(!gad) {
-  console.error('[ERROR] No gad given');
+	console.error('[ERROR] No gad given');
+} else if(!value) {
+	console.error('[ERROR] No value given');
 } else {
-  groupread({ host: host, port: port }, gad, function(err) {
-    if(err) {
-      console.error('[ERROR]'+err);
-    } 
-  });
+	if (host==='--socket') {
+		var opts = {path:port}; //path is hiding behind port variable from args
+	} else {
+		opts = { 
+			host: host, 
+			port: port 
+		};
+	}
+	groupread(opts, gad, function(err) {
+		if(err) {
+			console.error('[ERROR]'+err);
+		} else {
+			console.log('Read request sent.');
+		}
+	});
 }
