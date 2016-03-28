@@ -154,4 +154,4 @@ groupsocketlisten({ host: host, port: port }, function(parser) {
 
 ## eibd documentation
 
- * http://switch.dl.sourceforge.net/project/bcusdk/sdkdoc/sdkdoc-0.0.5.pdf
+ * http://www.auto.tuwien.ac.at/~mkoegler/eib/sdkdoc-0.0.5.pdf
