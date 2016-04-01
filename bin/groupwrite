@@ -8,46 +8,56 @@ var eibd = require('../');
  * send a group write telegram to a group address (for DPT5 values)
  */
 function groupwrite(opts, gad, value, callback) {
-  
-  var conn = eibd.Connection();
-
-  var address = eibd.str2addr(gad);
-
-  conn.socketRemote(opts, function(err) {
-
-    if (err) {
-        callback(err);
-        return;
-    }
-
-    conn.openTGroup(address, 1, function (err) {
-
-      if(err) {
-        callback(err);
-        return;
-      }
-
-      var msg = eibd.createMessage('write', 'DPT5', parseInt(value));
-      conn.sendAPDU(msg, callback);
-
-    });
-  });
+	var conn = eibd.Connection();
+	var address = eibd.str2addr(gad);
+	conn.socketRemote(opts, function(err) {
+		if (err) {
+			callback(err);
+			return;
+		}
+		conn.openTGroup(address, 1, function (err) {
+			if(err) {
+				callback(err);
+				return;
+			}
+			var msg = eibd.createMessage('write', 'DPT5', parseInt(value));
+			conn.sendAPDU(msg, callback);
+		});
+	});
 }
+
 var host = process.argv[2];
 var port = process.argv[3];
 var gad = process.argv[4];
 var value = process.argv[5];
 
 if(!host || !port) {
-  console.error('[ERROR] No hostname or port');
+	console.log('Usage:');
+	console.log('groupwrite <host> <port> <gad> <value>');
+	console.log('Sends a (DPT5) value to the knxd listening on <host>:<port> for group address <gad>');
+	console.log('');
+	console.log('groupwrite --socket <path> <gad> <value>');
+	console.log('Sends a (DPT5) value to the local knxd listening on unix socket <path> for group address <gad>');
+	console.log('');
+	console.error('[ERROR] No hostname or port, nor UNIX socket.');
 } else if(!gad) {
-  console.error('[ERROR] No gad given');
+	console.error('[ERROR] No gad given');
 } else if(!value) {
-  console.error('[ERROR] No value given');
+	console.error('[ERROR] No value given');
 } else {
-  groupwrite({ host: host, port: port}, gad, value, function(err) {
-    if(err) {
-      console.error('[ERROR] '+err);
-    } 
-  });
+	if (host==='--socket') {
+		var opts = {path:port}; //path is hiding behind port variable from args
+	} else {
+		opts = { 
+			host: host, 
+			port: port 
+		};
+	}
+	groupwrite(opts, gad, value, function(err) {
+		if(err) {
+			console.error('[ERROR]' + err);
+		} else {
+			console.log('Value written.');
+		}
+	});
 }

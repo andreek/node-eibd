@@ -50,11 +50,12 @@ var value = process.argv[7];
 
 var argumentsError;
 if(!host || !port) {
-  argumentsError = '[ERROR] No hostname or port';
+  argumentsError = '[ERROR] No hostname and port or --socket and path';
 } else if(!gad) {
   argumentsError = '[ERROR] No gad given';
 } else if(!action || action !== 'response' && action !== 'read' && action !== 'write') {
-  argumentsError = '[ERROR] Wrong action, should be read,write or response';
+  argumentsError = '[ERROR] Wrong action, should be read, write or response';
+  console.log(action);
 } else if(!dpt && action !== 'read') {
   argumentsError = '[ERROR] Response and write action require a DPT value';
 } else if (action !== 'read' && dpt.indexOf('DPT1') !== 0 && dpt.indexOf('DPT5') !== 0 && dpt.indexOf('DPT9') !== 0) {
@@ -64,18 +65,31 @@ if(!host || !port) {
 }
 
 if(argumentsError) {
-  console.log('\n' + argumentsError + '\n\n');
-  console.log('Arguments: host port gad action dpt value \n\n');
+  console.error('\n' + argumentsError + '\n\n');
+  console.log('Usage:')
+  console.log(' groupsend <host> <port> gad action dpt value');
+  console.log(' groupsend --socket <path> gad action dpt value \n\n');
   console.log('host = ipadress (Ex. 127.0.0.1 - localhost - host.com)');
   console.log('port = portnumber (Ex. 6720)');
+  console.log('<path> = alternative UNIX socket (Ex. /run/knx)')
   console.log('gad = groupnumber (Ex. 1/2/34)');
   console.log('action = eibd action (read , write or response)');
   console.log('dpt = data point type (Ex. DPT1, DPT2, DPT3, DPT5, DPT9)');
   console.log('value = data value for write/response (Ex. true , 23 , 12.23)');
 } else {
-  send({ host: host, port: port }, gad, action, dpt, value, function(err) {
+	if (host==='--socket') {
+		var opts = {path:port}; //path is hiding behind port variable from args
+	} else {
+		opts = { 
+			host: host, 
+			port: port 
+		};
+	}
+  send(opts, gad, action, dpt, value, function(err) {
     if(err) {
       console.error('[ERROR]'+err);
-    } 
+    } else {
+    	console.log('Action completed.');
+    }
   });
 }
