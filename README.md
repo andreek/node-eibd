@@ -34,17 +34,37 @@ npm test
   
 ./bin/groupwrite host port x/x/x 0..255
 
+e.g. `./bin/groupwrite localhost 6270 1/2/3 100`
+
+./bin/groupwrite --socket path x/x/x 0..255
+
+e.g. `./bin/groupwrite --socket /run/knx 1/2/3 100`
+
 ### groupswrite
   
 ./bin/groupswrite host port x/x/x 0..1
 
+e.g. `./bin/groupswrite localhost 6270 1/2/4 1`
+
+./bin/groupswrite --socket path x/x/x 0..1
+
+e.g. `./bin/grouspwrite --socket /run/knx 1/2/4 1`
+
 ### groupread
+(issues a read request telegram to the bus, does not wait for an answer!)
 
 ./bin/groupread host port x/x/x
+
+e.g. `./bin/groupread localhost 6270 1/2/4`
+
+./bin/groupread --socket path x/x/x
+
+e.g. `./bin/groupread --socket /run/knx 1/2/4`
 
 ### Listening for group telegrams
 
 ./bin/groupsocketlisten host port
+./bin/groupsocketlisten --socket path
 
 ## API
 
@@ -57,6 +77,7 @@ var opts = {
   host: 'localhost',
   port: 6720
 };
+// alternatively use UNIX sockets with var opts = {path: '/pathto/socket'};
 
 eibd.socketRemote(opts, function() {
   // connected
