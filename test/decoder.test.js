@@ -104,6 +104,39 @@ describe('Decoder', function() {
         assert.equal(Math.round(value * 100) / 100, -5.08);
       });
     });
-    
+  });
+  describe('UNKN', function() {
+    it('should decode DPT14 float value', function() {
+      var buf = new Buffer(4);
+      buf.writeUInt8(0x3e, 0);
+      buf.writeUInt8(0x9a, 1);
+      buf.writeUInt8(0x1c, 2);
+      buf.writeUInt8(0xac, 3);
+      enc.decode(12, buf, function(err, type, value) {
+        assert.equal(err, null);
+        assert.equal(type, 'UNKN');
+        var decoded = enc.decodeDPT14(value);
+        assert.equal(Math.round(decoded * 1000) / 1000, 0.301);
+      });
+    });
+    it('should decode DPT13 32bit integer value', function() {
+      var buf = new Buffer(4);
+      buf.writeInt32BE(0x6eadbeef);
+      enc.decode(12, buf, function(err, type, value) {
+        assert.equal(err, null);
+        assert.equal(type, 'UNKN');
+        var decoded = enc.decodeDPT13(value);
+        assert.equal(decoded, 0x6eadbeef);
+      });
+    });
+    it('should decode DPT16.002 Character String', function() {
+      var buf = Buffer.from('Hi buffer!!', 'latin1');
+      enc.decode(8 + buf.length, buf, function(err, type, value) {
+        assert.equal(err, null);
+        assert.equal(type, 'UNKN');
+        var decoded = value.toString('latin1');
+        assert.equal(decoded, 'Hi buffer!!');
+      });
+    });
   });
 });
