@@ -130,11 +130,11 @@ describe('Decoder', function() {
       });
     });
     it('should decode DPT16.002 Character String', function() {
-      var buf = Buffer.from('Hi buffer!!', 'latin1');
+      var buf = Buffer.from('Hi buffer!!');
       enc.decode(8 + buf.length, buf, function(err, type, value) {
         assert.equal(err, null);
         assert.equal(type, 'UNKN');
-        var decoded = value.toString('latin1');
+        var decoded = value.toString();
         assert.equal(decoded, 'Hi buffer!!');
       });
     });
