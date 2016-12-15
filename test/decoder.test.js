@@ -121,7 +121,7 @@ describe('Decoder', function() {
     });
     it('should decode DPT13 32bit integer value', function() {
       var buf = new Buffer(4);
-      buf.writeInt32BE(0x6eadbeef);
+      buf.writeInt32BE(0x6eadbeef, 0);
       enc.decode(12, buf, function(err, type, value) {
         assert.equal(err, null);
         assert.equal(type, 'UNKN');
