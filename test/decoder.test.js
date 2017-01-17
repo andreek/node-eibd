@@ -105,29 +105,4 @@ describe('Decoder', function() {
       });
     });
   });
-  describe('UNKN', function() {
-    it('should decode DPT14 float value', function() {
-      var buf = new Buffer(4);
-      buf.writeUInt8(0x3e, 0);
-      buf.writeUInt8(0x9a, 1);
-      buf.writeUInt8(0x1c, 2);
-      buf.writeUInt8(0xac, 3);
-      enc.decode(12, buf, function(err, type, value) {
-        assert.equal(err, null);
-        assert.equal(type, 'UNKN');
-        var decoded = enc.decodeDPT14(value);
-        assert.equal(Math.round(decoded * 1000) / 1000, 0.301);
-      });
-    });
-    it('should decode DPT13 32bit integer value', function() {
-      var buf = new Buffer(4);
-      buf.writeInt32BE(0x6eadbeef, 0);
-      enc.decode(12, buf, function(err, type, value) {
-        assert.equal(err, null);
-        assert.equal(type, 'UNKN');
-        var decoded = enc.decodeDPT13(value);
-        assert.equal(decoded, 0x6eadbeef);
-      });
-    });
-  });
 });
