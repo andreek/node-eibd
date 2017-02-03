@@ -8,64 +8,64 @@ var eibd = require('../');
  */
 function groupsocketlisten(opts, callback) {
 
-	var conn = eibd.Connection();
+  var conn = eibd.Connection();
 
-	conn.socketRemote(opts, function(err) {
+  conn.socketRemote(opts, function(err) {
 
-		if(err) {
-			callback(err);
-			return;
-		}
+    if(err) {
+      callback(err);
+      return;
+    }
 
-		conn.openGroupSocket(0, function(parser) {
-			callback(undefined, parser);
-		});
+    conn.openGroupSocket(0, function(parser) {
+      callback(undefined, parser);
+    });
 
-	});
+  });
 
-	conn.on('close', function () {
-		//restart...
-		setTimeout(function () { groupsocketlisten(opts, callback); }, 100);
-	});
+  conn.on('close', function () {
+    //restart...
+    setTimeout(function () { groupsocketlisten(opts, callback); }, 100);
+  });
 }
 
 var host = process.argv[2];
 var port = process.argv[3];
 
 if(!host || !port) {
-	console.log('Usage:');
-	console.log('groupsocketlisten <host> <port> ');
-	console.log('Prints telegrams received by knxd listening on <host>:<port>');
-	console.log('');
-	console.log('groupwrite --socket <path> ');
-	console.log('Prints telegrams received by local knxd listening on UNIX socket <path>');
-	console.log('');
-	console.error('[ERROR] No hostname or port, nor UNIX socket.');
+  console.log('Usage:');
+  console.log('groupsocketlisten <host> <port> ');
+  console.log('Prints telegrams received by knxd listening on <host>:<port>');
+  console.log('');
+  console.log('groupwrite --socket <path> ');
+  console.log('Prints telegrams received by local knxd listening on UNIX socket <path>');
+  console.log('');
+  console.error('[ERROR] No hostname or port, nor UNIX socket.');
 } else {
-	if (host==='--socket') {
-		var opts = {path:port}; //path is hiding behind port variable from args
-	} else {
-		opts = { 
-			host: host, 
-			port: port 
-		};
-	}
-	groupsocketlisten(opts, function(err, parser) {
-		if(!err) {
-			console.log('Listening... (Ctrl-c to abort)\n');
-			parser.on('write', function(src, dest, type, val){
-				console.log('Write from '+src+' to '+dest+': '+val+' ['+type+']');
-			});
-			parser.on('response', function(src, dest, type, val) {
-				console.log('Response from '+src+' to '+dest+': '+val+' ['+type+']');
-			});
-			parser.on('read', function(src, dest) {
-				console.log('Read from '+src+' to '+dest);
-			});
+  if (host==='--socket') {
+    var opts = {path:port}; //path is hiding behind port variable from args
+  } else {
+    opts = {
+      host: host,
+      port: port
+    };
+  }
+  groupsocketlisten(opts, function(err, parser) {
+    if(!err) {
+      console.log('Listening... (Ctrl-c to abort)\n');
+      parser.on('write', function(src, dest, type, val){
+        console.log('Write from '+src+' to '+dest+': '+val+' ['+type+']');
+      });
+      parser.on('response', function(src, dest, type, val) {
+        console.log('Response from '+src+' to '+dest+': '+val+' ['+type+']');
+      });
+      parser.on('read', function(src, dest) {
+        console.log('Read from '+src+' to '+dest);
+    });
 
-		} else {
-			console.error('[ERROR] '+err);
-		}
-
-	});
+    } else {
+      console.error('[ERROR] '+err);
+    }
+  
+  });
 }
