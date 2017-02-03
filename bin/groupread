@@ -36,14 +36,12 @@ if(!host || !port) {
 	console.log('groupread <host> <port> <gad>');
 	console.log('Sends read request to the knxd listening on <host>:<port> for group address <gad>');
 	console.log('');
-	console.log('groupread --socket <path> <gad> <value>');
+	console.log('groupread --socket <path> <gad>');
 	console.log('Sends read request to the local knxd listening on unix socket <path> for group address <gad>');
 	console.log('');
 	console.error('Parameter missing.');
 } else if(!gad) {
 	console.error('[ERROR] No gad given');
-} else if(!value) {
-	console.error('[ERROR] No value given');
 } else {
 	if (host==='--socket') {
 		var opts = {path:port}; //path is hiding behind port variable from args
