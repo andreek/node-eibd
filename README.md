@@ -27,8 +27,11 @@ npm test
  * EIS 13 / DPT 4.xxx
  * EIS 14 / DPT 6.xxx
  * EIS 15 / DPT 16.xxx
+ * DPT232
 
 ## CLI Usage
+
+View source code of cli tools as examples for usage of node-eibd.
 
 ### groupwrite
   
@@ -66,112 +69,10 @@ e.g. `./bin/groupread --socket /run/knx 1/2/4`
 ./bin/groupsocketlisten host port
 ./bin/groupsocketlisten --socket path
 
-## API
-
-### Connection.socketRemote(opts, callback)
-
-Opens a connection eibd over TCP/IP. 
-
-```javascript
-var opts = {
-  host: 'localhost',
-  port: 6720
-};
-// alternatively use UNIX sockets with var opts = {path: '/pathto/socket'};
-
-eibd.socketRemote(opts, function() {
-  // connected
-});
-```
-
-### Connection.openGroupSocket(writeOnly, callback)
-
-Opens a Group communication interface
-
-```javascript
-eibd.on('data', function(action, src, dest, val) {
-  // do something
-});
-
-eibd.openGroupSocket(0);
-```
-
-### Connection.openTGroup(dest, writeOnly, callback)
-
-Opens a connection of type T_Group
-
-```javascript
-var dest = eibd.str2addr('x/x/x');
-eibd.openTGroup(dest, 1, function(err) {
-
-});
-```
-
-### Connection.sendAPDU(data, callback)
-
-Sends an APDU
-
-### Connection.sendRequest(data, callback)
-
-Sends TCP/IP request to eib-daemon
-
-### Parser.parseTelegram(telegram)
-
-Parse telegram and emits 'write', 'response' or 'read' events.
-
-### Parser.parseValue(len, telegram)
-
-Try to parse values with assumptions about package len.
-
-### Parse.encodeEIS5(buffer)
-
-Parse value to EIS 5 / DPT 9.xxx from buffer
-
-### str2addr(str);
-
-Encodes string to knx address
-
-### addr2str(adr, gad=true/false);
-
-Decodes knx address to string
-
-## Example
-```javascript
-var eibd = require('eibd');
-/**
- * groupsocketlisten
- */
-function groupsocketlisten(opts, callback) {
-
-  var conn = eibd.Connection();
-
-  conn.socketRemote(opts, function() {
-    
-    conn.openGroupSocket(0, callback);
-
-  });
-
-}
-
-var host = 'localhost';
-var port = 6720;
-
-groupsocketlisten({ host: host, port: port }, function(parser) {
-
-  parser.on('write', function(src, dest, dpt, val){
-    console.log('Write from '+src+' to '+dest+': '+val);
-  });
-
-  parser.on('response', function(src, dest, val) {
-    console.log('Response from '+src+' to '+dest+': '+val);
-  });
-  
-  parser.on('read', function(src, dest) {
-    console.log('Read from '+src+' to '+dest);
-  });
-
-});
-```
+## related projects
+ * https://github.com/knxd/knxd
+ * https://github.com/snowdd1/homebridge-knx
+ * https://bitbucket.org/ekarak/node-red-contrib-knxjs
 
 ## eibd documentation
 
