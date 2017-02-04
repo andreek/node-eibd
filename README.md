@@ -67,6 +67,7 @@ e.g. `./bin/groupread --socket /run/knx 1/2/4`
 ### Listening for group telegrams
 
 ./bin/groupsocketlisten host port
+
 ./bin/groupsocketlisten --socket path
 
 ## Related projects
