@@ -69,7 +69,7 @@ e.g. `./bin/groupread --socket /run/knx 1/2/4`
 ./bin/groupsocketlisten host port
 ./bin/groupsocketlisten --socket path
 
-## related projects
+## Related projects
  * https://github.com/knxd/knxd
  * https://github.com/snowdd1/homebridge-knx
  * https://bitbucket.org/ekarak/node-red-contrib-knxjs
