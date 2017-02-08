@@ -31,7 +31,7 @@ npm test
 
 ## CLI Usage
 
-View source code of cli tools as examples for usage of node-eibd.
+View source code of cli tools as examples for usage.
 
 ### groupwrite
   
