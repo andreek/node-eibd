@@ -7,4 +7,4 @@ exports.Connection = Connection;
 exports.Parser = Parser;
 exports.createMessage = createMessage;
 exports.str2addr = tools.str2addr;
-exports.addr2str = tools.adr2str;
+exports.addr2str = tools.addr2str;
