@@ -66,6 +66,22 @@ describe('Encoder', function() {
     });
   });
 
+  describe('DPT7 encode', function() {
+    it('should encode DPT7 value', function() {
+      var buffer = enc.encode('DPT7',0);
+      assert.equal(buffer.readUInt16BE(0), 0x0000);
+
+      buffer = enc.encode('DPT7',2550);
+      assert.equal(buffer.readUInt16BE(0), 0x09F6);
+
+      buffer = enc.encode('DPT7',31247);
+      assert.equal(buffer.readUInt16BE(0), 0x7A0F);
+
+      buffer = enc.encode('DPT7',65535);
+      assert.equal(buffer.readUInt16BE(0), 0xFFFF);
+    });
+  });
+
   describe('DPT9 encode', function() {
     it('should encode DPT9 value', function() {
       var buffer = enc.encode('DPT9',40);

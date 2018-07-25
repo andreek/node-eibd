@@ -51,6 +51,14 @@ describe('Creator', function() {
     assert.deepEqual(createMessage('response','DPT5',4), [0, 64, 4]);
   });
 
+  it('should create DPT7 messages', function() {
+    assert.deepEqual(createMessage('write','DPT7',0), [0, 128, 0x00, 0x00]);
+    assert.deepEqual(createMessage('write','DPT7.001',31247), [0, 128, 0x7A, 0x0F]);
+    assert.deepEqual(createMessage('write','DPT7.600',2550), [0, 128, 0x09, 0xF6]);
+    assert.deepEqual(createMessage('read','DPT7'), [0, 0]);
+    assert.deepEqual(createMessage('response','DPT7',65535), [0, 64, 0xFF, 0xFF]);
+  });
+
   it('should create DPT9 messages', function() {
     assert.deepEqual(createMessage('write','DPT9',-5.08), [0, 128, 0x86, 0x4]);
     assert.deepEqual(createMessage('read','DPT9'), [0, 0]);
