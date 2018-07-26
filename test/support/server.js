@@ -36,7 +36,7 @@ TestServer.prototype.end = function(callback) {
 };
 
 TestServer.prototype.noticeSockets = function() {
-  var buf = new Buffer([0,8,0,27,0,0,2,1,0,0,0,8,0,27,0,0,0,1,0,0,0,9,0,27,11,8,11,4,0,40,0]);
+  var buf = Buffer.from([0,8,0,27,0,0,2,1,0,0,0,8,0,27,0,0,0,1,0,0,0,9,0,27,11,8,11,4,0,40,0]);
   for(var i in this.groupSockets) {
     var socket = this.groupSockets[i];
     socket.write(buf);
@@ -78,7 +78,7 @@ TestServer.prototype.onData = function(socket, buf) {
       case 34:
         
         var data = [0, 2, 0, 34];
-        var buf = new Buffer(data);
+        var buf = Buffer.from(data);
         var self = this;
         socket.write(buf, function() {
           self.noticeSockets(req, dest, dest, 64, 255);

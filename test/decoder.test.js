@@ -31,7 +31,7 @@ describe('Decoder', function() {
 
   describe('DPT5', function() {
     it('should decode DPT5 value', function() {
-      var buf = new Buffer(1);
+      var buf = Buffer.alloc(1);
       buf.writeUInt8(150, 0);
       enc.decode(9, buf, function(err, type, value) {
         assert.equal(err, null);
@@ -40,7 +40,7 @@ describe('Decoder', function() {
       });
     }),
     it('should throw error if buffer wrong lenght', function() {
-      var buf = new Buffer(2);
+      var buf = Buffer.alloc(2);
       buf.writeUInt8(150, 0);
       buf.writeUInt8(151, 1);
       enc.decode(9, buf, function(err) {
@@ -51,7 +51,7 @@ describe('Decoder', function() {
 
   describe('DPT9', function() {
     it('should decode DPT9 float value - exponent4', function() {
-      var buf = new Buffer(2);
+      var buf = Buffer.alloc(2);
       buf.writeUInt8(0xA3, 0);
       buf.writeUInt8(0xB5, 1);
       enc.decode(10, buf, function(err, type, value) {
@@ -62,7 +62,7 @@ describe('Decoder', function() {
     });
     
     it('should decode DPT9 float value - exponent4', function() {
-      var buf = new Buffer(2);
+      var buf = Buffer.alloc(2);
       buf.writeUInt8(0xA5, 0);
       buf.writeUInt8(0x8D, 1);
       enc.decode(10, buf, function(err, type, value) {
@@ -73,7 +73,7 @@ describe('Decoder', function() {
     });
     
     it('should decode DPT9 float value - exponent4', function() {
-      var buf = new Buffer(2);
+      var buf = Buffer.alloc(2);
       buf.writeUInt8(0xA3, 0);
       buf.writeUInt8(0x21, 1);
       enc.decode(10, buf, function(err, type, value) {
@@ -84,7 +84,7 @@ describe('Decoder', function() {
     });
     
      it('should decode DPT9 float value - exponent6', function() {
-      var buf = new Buffer(2);
+      var buf = Buffer.alloc(2);
       buf.writeUInt8(0xB6, 0);
       buf.writeUInt8(0xC7, 1);
       enc.decode(10, buf, function(err, type, value) {
@@ -95,7 +95,7 @@ describe('Decoder', function() {
     });
     
     it('should decode DPT9 float value - exponent2', function() {
-      var buf = new Buffer(2);
+      var buf = Buffer.alloc(2);
       buf.writeUInt8(0x97, 0);
       buf.writeUInt8(0x81, 1);
       enc.decode(10, buf, function(err, type, value) {
@@ -107,7 +107,7 @@ describe('Decoder', function() {
   });
   describe('UNKN', function() {
     it('should decode DPT14 float value', function() {
-      var buf = new Buffer(4);
+      var buf = Buffer.alloc(4);
       buf.writeUInt8(0x3e, 0);
       buf.writeUInt8(0x9a, 1);
       buf.writeUInt8(0x1c, 2);
@@ -120,7 +120,7 @@ describe('Decoder', function() {
       });
     });
     it('should decode DPT13 32bit integer value', function() {
-      var buf = new Buffer(4);
+      var buf = Buffer.alloc(4);
       buf.writeInt32BE(0x6eadbeef, 0);
       enc.decode(12, buf, function(err, type, value) {
         assert.equal(err, null);
