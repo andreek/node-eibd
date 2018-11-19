@@ -12,7 +12,7 @@ describe('Decoder', function() {
   });
   describe('DPT1', function() {
     it('should decode DPT1 value 1', function() {
-      var data = 65;
+      var data = 1;
       enc.decode(8, data, function(err, type, value) {
         assert.equal(err, null);
         assert.equal(type, 'DPT1');
@@ -20,7 +20,7 @@ describe('Decoder', function() {
       });
     }),
     it('should decode DPT1 value 0', function() {
-      var data = 64;
+      var data = 0;
       enc.decode(8, data, function(err, type, value) {
         assert.equal(err, null);
         assert.equal(type, 'DPT1');

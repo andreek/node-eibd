@@ -1,3 +1,5 @@
 node_modules/
 .project
 .DS_Store
+.nyc_output/
+.tern-project
