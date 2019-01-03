@@ -9,7 +9,7 @@ var eibd = require('../');
  * Send a KNX telegram with support for read/write/response messages and DPT1, DPT2, DPT3, DPT5, DPT9 data format
  * Contains functionality from groupread/groupwrite/groupswrite in one cmd line application
  *
- * Arguments: host port gad action dpt value 
+ * Arguments: host port gad action dpt value
  * host = ipadress (Ex. 127.0.0.1 - localhost - host.com)5
  * port = portnumber (Ex. 6720)
  * gad = groupnumber (Ex. 1/2/34)
@@ -17,7 +17,7 @@ var eibd = require('../');
  * dpt = data point type for write/response (Ex. DPT1, DPT2, DPT3, DPT5, DPT9)
  * value = data value for write/response (Ex. true , 23 , 12.23)
  */
-function send(opts, gad, action, dpt, value, callback) { 
+function send(opts, gad, action, dpt, value, callback) {
   var conn = new eibd.Connection();
   conn.socketRemote(opts, function(err) {
 
@@ -32,7 +32,7 @@ function send(opts, gad, action, dpt, value, callback) {
         callback(err);
         return;
       }
-      
+
       var msg = eibd.createMessage(action, dpt, parseFloat(value));
       conn.sendAPDU(msg, callback);
 
@@ -80,9 +80,9 @@ if(argumentsError) {
 	if (host==='--socket') {
 		var opts = {path:port}; //path is hiding behind port variable from args
 	} else {
-		opts = { 
-			host: host, 
-			port: port 
+		opts = {
+			host: host,
+			port: port
 		};
 	}
   send(opts, gad, action, dpt, value, function(err) {
