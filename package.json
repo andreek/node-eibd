@@ -8,7 +8,7 @@
     "url": "https://github.com/andreek/node-eibd"
   },
   "engines": {
-    "node": ">=5.10.0"
+    "node": ">=8.16.1"
   },
   "bin": {
     "groupread": "./bin/groupread",
