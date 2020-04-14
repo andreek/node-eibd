@@ -1,6 +1,6 @@
 {
   "name": "eibd",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "node eibd client",
   "main": "./index",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/andreek/node-eibd"
   },
   "engines": {
-    "node": ">=8.16.1"
+    "node": ">=10.19.0"
   },
   "bin": {
     "groupread": "./bin/groupread",
@@ -18,7 +18,7 @@
     "groupsend": "./bin/groupsend"
   },
   "devDependencies": {
-    "mocha": "^6.2.0"
+    "mocha": "^7.1.1"
   },
   "author": "Andree Klattenhoff",
   "contributors": [
