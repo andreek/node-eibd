@@ -1,6 +1,6 @@
 {
   "name": "eibd",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "node eibd client",
   "main": "./index",
   "repository": {
@@ -18,7 +18,7 @@
     "groupsend": "./bin/groupsend"
   },
   "devDependencies": {
-    "mocha": "^7.1.1"
+    "mocha": "^9.2.2"
   },
   "author": "Andree Klattenhoff",
   "contributors": [

@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 .nyc_output/
 .tern-project
+package-lock.json
